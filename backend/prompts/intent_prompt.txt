@@ -1,0 +1,3 @@
+Extract a structured product intent from the user's software request.
+Return only JSON matching IntentModel. Include assumptions for missing details,
+conflicts for incompatible requirements, and quality flags for uncertainty.

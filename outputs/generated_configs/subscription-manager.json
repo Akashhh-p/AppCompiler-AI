@@ -1,0 +1,778 @@
+{
+  "app": {
+    "name": "Subscription Manager",
+    "slug": "subscription-manager",
+    "version": "1.0.0",
+    "description": "Create an invoice system with payments and login, details TBD."
+  },
+  "assumptions": [
+    "Intent extraction used deterministic local rules in 0.02 ms."
+  ],
+  "entities": [
+    {
+      "name": "subscription",
+      "table": "subscriptions",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "user_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "plan",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "renewal_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "payment",
+      "table": "payments",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "subscription_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "amount",
+          "type": "currency",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "invoice",
+      "table": "invoices",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "customer",
+      "table": "customers",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Subscription Table",
+            "type": "table",
+            "entity": "subscription"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Subscriptions",
+        "route": "/subscriptions",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Subscription Table",
+            "type": "table",
+            "entity": "subscription"
+          },
+          {
+            "name": "Subscription Form",
+            "type": "form",
+            "entity": "subscription"
+          }
+        ],
+        "forms": [
+          {
+            "name": "subscription_form",
+            "entity": "subscription",
+            "fields": [
+              "user_id",
+              "plan",
+              "status",
+              "renewal_at"
+            ],
+            "submit_endpoint": "/api/subscriptions"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Payments",
+        "route": "/payments",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Payment Table",
+            "type": "table",
+            "entity": "payment"
+          },
+          {
+            "name": "Payment Form",
+            "type": "form",
+            "entity": "payment"
+          }
+        ],
+        "forms": [
+          {
+            "name": "payment_form",
+            "entity": "payment",
+            "fields": [
+              "subscription_id",
+              "amount",
+              "status"
+            ],
+            "submit_endpoint": "/api/payments"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Invoices",
+        "route": "/invoices",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Invoice Table",
+            "type": "table",
+            "entity": "invoice"
+          },
+          {
+            "name": "Invoice Form",
+            "type": "form",
+            "entity": "invoice"
+          }
+        ],
+        "forms": [
+          {
+            "name": "invoice_form",
+            "entity": "invoice",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/invoices"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Customers",
+        "route": "/customers",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Customer Table",
+            "type": "table",
+            "entity": "customer"
+          },
+          {
+            "name": "Customer Form",
+            "type": "form",
+            "entity": "customer"
+          }
+        ],
+        "forms": [
+          {
+            "name": "customer_form",
+            "entity": "customer",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/customers"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "list_subscriptions",
+        "method": "GET",
+        "path": "/api/subscriptions",
+        "entity": "subscription",
+        "table": "subscriptions",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_subscriptions",
+        "method": "POST",
+        "path": "/api/subscriptions",
+        "entity": "subscription",
+        "table": "subscriptions",
+        "body_fields": [
+          "user_id",
+          "plan",
+          "status",
+          "renewal_at"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_payments",
+        "method": "GET",
+        "path": "/api/payments",
+        "entity": "payment",
+        "table": "payments",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_payments",
+        "method": "POST",
+        "path": "/api/payments",
+        "entity": "payment",
+        "table": "payments",
+        "body_fields": [
+          "subscription_id",
+          "amount",
+          "status"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_invoices",
+        "method": "GET",
+        "path": "/api/invoices",
+        "entity": "invoice",
+        "table": "invoices",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_invoices",
+        "method": "POST",
+        "path": "/api/invoices",
+        "entity": "invoice",
+        "table": "invoices",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_customers",
+        "method": "GET",
+        "path": "/api/customers",
+        "entity": "customer",
+        "table": "customers",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_customers",
+        "method": "POST",
+        "path": "/api/customers",
+        "entity": "customer",
+        "table": "customers",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "subscriptions",
+        "entity": "subscription",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "user_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "plan",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "renewal_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "payments",
+        "entity": "payment",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "subscription_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "amount",
+            "type": "currency",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "invoices",
+        "entity": "invoice",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "customers",
+        "entity": "customer",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "subscriptions",
+        "to_table": "users",
+        "type": "one_to_many",
+        "field": "user_id"
+      },
+      {
+        "from_table": "payments",
+        "to_table": "subscriptions",
+        "type": "one_to_many",
+        "field": "subscription_id"
+      }
+    ]
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "user",
+        "description": "User role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "read:dashboard",
+        "description": "Allows read:dashboard",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:records",
+        "description": "Allows write:records",
+        "roles": [
+          "user"
+        ]
+      }
+    ]
+  },
+  "business_logic": [],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": false,
+    "repair_count": 0
+  },
+  "repair_history": [],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "registered route /dashboard",
+      "registered route /subscriptions",
+      "registered route /payments",
+      "registered route /invoices",
+      "registered route /customers",
+      "created table subscriptions(id, plan, renewal_at, status, user_id)",
+      "created table payments(amount, created_at, id, status, subscription_id)",
+      "created table invoices(created_at, description, id, name, owner_id)",
+      "created table customers(created_at, description, id, name, owner_id)",
+      "created table users(email, id, password_hash)",
+      "bound GET /api/subscriptions to subscriptions",
+      "bound POST /api/subscriptions to subscriptions",
+      "bound GET /api/payments to payments",
+      "bound POST /api/payments to payments",
+      "bound GET /api/invoices to invoices",
+      "bound POST /api/invoices to invoices",
+      "bound GET /api/customers to customers",
+      "bound POST /api/customers to customers",
+      "bound POST /api/auth/login to users",
+      "verified form login_form submits to /api/auth/login",
+      "verified form subscription_form submits to /api/subscriptions",
+      "verified form payment_form submits to /api/payments",
+      "verified form invoice_form submits to /api/invoices",
+      "verified form customer_form submits to /api/customers"
+    ],
+    "errors": []
+  }
+}

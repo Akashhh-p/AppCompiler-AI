@@ -1,0 +1,975 @@
+{
+  "pipeline": {
+    "id": "368451bf-b946-5cb3-bdae-09bdf7a463e9",
+    "input_prompt": "Build analytics dashboard but do not add roles.",
+    "stage_status": [
+      {
+        "stage": "intent_extraction",
+        "status": "passed",
+        "latency_ms": 0.11,
+        "summary": "Extracted structured intent."
+      },
+      {
+        "stage": "system_design",
+        "status": "passed",
+        "latency_ms": 0.11,
+        "summary": "Designed config-driven architecture."
+      },
+      {
+        "stage": "schema_generation",
+        "status": "passed",
+        "latency_ms": 1.01,
+        "summary": "Generated strict app_config schema."
+      },
+      {
+        "stage": "refinement",
+        "status": "passed",
+        "latency_ms": 1.37,
+        "summary": "Normalized permissions, deduped surfaces, and completed business rules."
+      },
+      {
+        "stage": "validation",
+        "status": "failed",
+        "latency_ms": 0.14,
+        "summary": "1 errors, 0 warnings."
+      },
+      {
+        "stage": "repair",
+        "status": "passed",
+        "latency_ms": 1.81,
+        "summary": "Applied 1 localized repair pass(es)."
+      },
+      {
+        "stage": "execution_simulation",
+        "status": "passed",
+        "latency_ms": 0.08,
+        "summary": "Simulated routes, UI, API, DB, auth, permissions, and business rules."
+      }
+    ],
+    "total_latency_ms": 4.75,
+    "deterministic_mode": true,
+    "injected_fault": "remove_relationship_table"
+  },
+  "app": {
+    "name": "Generic Business Builder",
+    "slug": "generic-business-builder",
+    "version": "1.0.0",
+    "description": "Build analytics dashboard but do not add roles."
+  },
+  "assumptions": [],
+  "intent": {
+    "app_type": "business_app",
+    "domain": "generic_business",
+    "primary_goal": "Build analytics dashboard but do not add roles.",
+    "features": [
+      "dashboard",
+      "records",
+      "analytics"
+    ],
+    "requested_entities": [
+      "workspace",
+      "record",
+      "analytics_event"
+    ],
+    "requested_roles": [
+      "user"
+    ],
+    "auth_required": true,
+    "payments_required": false,
+    "analytics_required": true,
+    "premium_required": false,
+    "crud_required": true,
+    "ambiguities": [],
+    "conflicts": [],
+    "missing_details": [],
+    "assumptions": []
+  },
+  "design": {
+    "architecture": "config-driven full-stack application",
+    "modules": [
+      "ui",
+      "api",
+      "database",
+      "auth",
+      "validation",
+      "runtime_simulation",
+      "analytics"
+    ],
+    "entities": [
+      {
+        "name": "workspace",
+        "description": "Workspace records used by the generic_business app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "record",
+        "description": "Record records used by the generic_business app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "analytics_event",
+        "description": "Analytics Event records used by the generic_business app.",
+        "fields": [
+          "id",
+          "event_name",
+          "actor_id",
+          "created_at"
+        ]
+      }
+    ],
+    "roles": [
+      "user",
+      "admin"
+    ],
+    "user_flows": [
+      "login",
+      "dashboard",
+      "manage workspaces",
+      "manage records",
+      "admin analytics review"
+    ],
+    "access_model": {
+      "default_read_roles": [
+        "user",
+        "admin"
+      ],
+      "write_roles": [
+        "user",
+        "admin"
+      ],
+      "admin_only": [
+        "analytics",
+        "user_management"
+      ],
+      "premium_requires": null
+    },
+    "data_model_summary": "3 domain entities compiled into relational tables with inferred relationships.",
+    "business_rules_summary": "Role access, ownership checks, CRUD permissions, and audit-safe persistence.",
+    "risk_notes": [],
+    "app_name": "Generic Business Builder",
+    "summary": "Build analytics dashboard but do not add roles.",
+    "premium_required": false,
+    "analytics_required": true,
+    "payments_required": false
+  },
+  "entities": [
+    {
+      "name": "workspace",
+      "table": "workspaces",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "record",
+      "table": "records",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "analytics_event",
+      "table": "analytics_events",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "event_name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "actor_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "layout": "auth",
+        "components": [
+          {
+            "name": "Login Form",
+            "type": "form",
+            "entity": "user"
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "layout": "dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Summary Metrics",
+            "type": "metric",
+            "entity": "workspace"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:workspace"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Workspaces",
+        "route": "/workspaces",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Workspace Table",
+            "type": "table",
+            "entity": "workspace"
+          },
+          {
+            "name": "Workspace Form",
+            "type": "form",
+            "entity": "workspace"
+          }
+        ],
+        "forms": [
+          {
+            "name": "workspace_form",
+            "entity": "workspace",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/workspaces"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:workspace",
+          "write:workspace"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Records",
+        "route": "/records",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Record Table",
+            "type": "table",
+            "entity": "record"
+          },
+          {
+            "name": "Record Form",
+            "type": "form",
+            "entity": "record"
+          }
+        ],
+        "forms": [
+          {
+            "name": "record_form",
+            "entity": "record",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/records"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:record",
+          "write:record"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Admin Analytics",
+        "route": "/admin/analytics",
+        "layout": "analytics",
+        "components": [
+          {
+            "name": "Analytics Metrics",
+            "type": "metric",
+            "entity": "analytics_event"
+          },
+          {
+            "name": "Funnel Chart",
+            "type": "chart",
+            "entity": "analytics_event"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "admin"
+        ],
+        "required_permissions": [
+          "read:analytics"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "validations": [
+          "password_hash_transform"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      },
+      {
+        "name": "get_workspaces",
+        "method": "GET",
+        "path": "/api/workspaces",
+        "entity": "workspace",
+        "table": "workspaces",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:workspace"
+        ]
+      },
+      {
+        "name": "post_workspaces",
+        "method": "POST",
+        "path": "/api/workspaces",
+        "entity": "workspace",
+        "table": "workspaces",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:workspace"
+        ]
+      },
+      {
+        "name": "get_records",
+        "method": "GET",
+        "path": "/api/records",
+        "entity": "record",
+        "table": "records",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:record"
+        ]
+      },
+      {
+        "name": "post_records",
+        "method": "POST",
+        "path": "/api/records",
+        "entity": "record",
+        "table": "records",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:record"
+        ]
+      },
+      {
+        "name": "get_analytics_events",
+        "method": "GET",
+        "path": "/api/analytics-events",
+        "entity": "analytics_event",
+        "table": "analytics_events",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:analytics_event"
+        ]
+      },
+      {
+        "name": "read_analytics",
+        "method": "GET",
+        "path": "/api/admin/analytics",
+        "entity": "analytics_event",
+        "table": "analytics_events",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [
+          "admin_role_required"
+        ],
+        "required_roles": [
+          "admin"
+        ],
+        "required_permissions": [
+          "read:analytics"
+        ]
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "workspaces",
+        "entity": "workspace",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "records",
+        "entity": "record",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "analytics_events",
+        "entity": "analytics_event",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "event_name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "actor_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": []
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "admin",
+        "description": "Admin role"
+      },
+      {
+        "name": "user",
+        "description": "User role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "delete:analytics_event",
+        "description": "Allows delete:analytics_event",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:record",
+        "description": "Allows delete:record",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:workspace",
+        "description": "Allows delete:workspace",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:analytics_event",
+        "description": "Allows manage:analytics_event",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:record",
+        "description": "Allows manage:record",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:users",
+        "description": "Allows manage:users",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:workspace",
+        "description": "Allows manage:workspace",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "read:analytics",
+        "description": "Allows read:analytics",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "read:analytics_event",
+        "description": "Allows read:analytics_event",
+        "roles": [
+          "admin",
+          "user"
+        ]
+      },
+      {
+        "name": "read:record",
+        "description": "Allows read:record",
+        "roles": [
+          "admin",
+          "user"
+        ]
+      },
+      {
+        "name": "read:workspace",
+        "description": "Allows read:workspace",
+        "roles": [
+          "admin",
+          "user"
+        ]
+      },
+      {
+        "name": "write:analytics_event",
+        "description": "Allows write:analytics_event",
+        "roles": [
+          "admin",
+          "user"
+        ]
+      },
+      {
+        "name": "write:record",
+        "description": "Allows write:record",
+        "roles": [
+          "admin",
+          "user"
+        ]
+      },
+      {
+        "name": "write:workspace",
+        "description": "Allows write:workspace",
+        "roles": [
+          "admin",
+          "user"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "role-access",
+      "description": "Protected pages and APIs require declared roles and permissions.",
+      "expression": "all(required_permissions in user.permissions)",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "ownership-restriction",
+      "description": "Users may update only records they own unless they have manage permission.",
+      "expression": "record.owner_id == user.id or user.has_manage_permission",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "admin-analytics-access",
+      "description": "Admin analytics requires admin role and read:analytics permission.",
+      "expression": "user.role == 'admin' and 'read:analytics' in user.permissions",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": true,
+    "repair_count": 1
+  },
+  "repair_history": [
+    {
+      "issue_code": "RELATIONSHIP_REFERENCES_MISSING_TABLE",
+      "location": "database.relationships",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 5,
+          "endpoints": 7,
+          "tables": 4
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 5,
+          "endpoints": 7,
+          "tables": 4
+        }
+      },
+      "repair": "Applied localized repair for RELATIONSHIP_REFERENCES_MISSING_TABLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    }
+  ],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "rendered page Login with auth layout",
+      "rendered component Login Form",
+      "registered route /dashboard",
+      "rendered page Dashboard with dashboard layout",
+      "rendered component Navigation",
+      "rendered component Summary Metrics",
+      "registered route /workspaces",
+      "rendered page Workspaces with crud layout",
+      "rendered component Workspace Table",
+      "rendered component Workspace Form",
+      "registered route /records",
+      "rendered page Records with crud layout",
+      "rendered component Record Table",
+      "rendered component Record Form",
+      "registered route /admin/analytics",
+      "rendered page Admin Analytics with analytics layout",
+      "rendered component Analytics Metrics",
+      "rendered component Funnel Chart",
+      "created table workspaces(created_at, description, id, name, owner_id)",
+      "created table records(created_at, description, id, name, owner_id)",
+      "created table analytics_events(actor_id, created_at, event_name, id)",
+      "created table users(email, id, password_hash, role)",
+      "registered endpoint POST /api/auth/login",
+      "bound POST /api/auth/login to users",
+      "registered endpoint GET /api/workspaces",
+      "bound GET /api/workspaces to workspaces",
+      "registered endpoint POST /api/workspaces",
+      "bound POST /api/workspaces to workspaces",
+      "registered endpoint GET /api/records",
+      "bound GET /api/records to records",
+      "registered endpoint POST /api/records",
+      "bound POST /api/records to records",
+      "registered endpoint GET /api/analytics-events",
+      "bound GET /api/analytics-events to analytics_events",
+      "registered endpoint GET /api/admin/analytics",
+      "bound GET /api/admin/analytics to analytics_events",
+      "loaded auth role admin",
+      "loaded auth role user",
+      "loaded permission delete:analytics_event",
+      "loaded permission delete:record",
+      "loaded permission delete:workspace",
+      "loaded permission manage:analytics_event",
+      "loaded permission manage:record",
+      "loaded permission manage:users",
+      "loaded permission manage:workspace",
+      "loaded permission read:analytics",
+      "loaded permission read:analytics_event",
+      "loaded permission read:record",
+      "loaded permission read:workspace",
+      "loaded permission write:analytics_event",
+      "loaded permission write:record",
+      "loaded permission write:workspace",
+      "verified form login_form submits to /api/auth/login",
+      "checked permission read:workspace for /dashboard",
+      "checked permission read:workspace for /workspaces",
+      "checked permission write:workspace for /workspaces",
+      "verified form workspace_form submits to /api/workspaces",
+      "checked permission read:record for /records",
+      "checked permission write:record for /records",
+      "verified form record_form submits to /api/records",
+      "checked permission read:analytics for /admin/analytics",
+      "compiled business rule role-access",
+      "compiled business rule ownership-restriction",
+      "compiled business rule admin-analytics-access",
+      "verified admin analytics access check"
+    ],
+    "errors": []
+  },
+  "quality_metrics": {
+    "consistency_score": 95,
+    "execution_readiness_score": 96,
+    "schema_completeness_score": 94,
+    "repairability_score": 92
+  }
+}

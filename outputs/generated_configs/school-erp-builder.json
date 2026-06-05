@@ -1,0 +1,1412 @@
+{
+  "pipeline": {
+    "id": "a416a495-9a54-524d-8a11-c3159552f232",
+    "input_prompt": "Build a school ERP and remove all authentication.",
+    "stage_status": [
+      {
+        "stage": "intent_extraction",
+        "status": "passed",
+        "latency_ms": 0.09,
+        "summary": "Extracted structured intent."
+      },
+      {
+        "stage": "system_design",
+        "status": "passed",
+        "latency_ms": 0.1,
+        "summary": "Designed config-driven architecture."
+      },
+      {
+        "stage": "schema_generation",
+        "status": "passed",
+        "latency_ms": 0.94,
+        "summary": "Generated strict app_config schema."
+      },
+      {
+        "stage": "refinement",
+        "status": "passed",
+        "latency_ms": 1.9,
+        "summary": "Normalized permissions, deduped surfaces, and completed business rules."
+      },
+      {
+        "stage": "validation",
+        "status": "failed",
+        "latency_ms": 0.17,
+        "summary": "2 errors, 0 warnings."
+      },
+      {
+        "stage": "repair",
+        "status": "passed",
+        "latency_ms": 2.9,
+        "summary": "Applied 1 localized repair pass(es)."
+      },
+      {
+        "stage": "execution_simulation",
+        "status": "passed",
+        "latency_ms": 0.11,
+        "summary": "Simulated routes, UI, API, DB, auth, permissions, and business rules."
+      }
+    ],
+    "total_latency_ms": 6.32,
+    "deterministic_mode": true,
+    "injected_fault": "remove_premium_rule"
+  },
+  "app": {
+    "name": "School Erp Builder",
+    "slug": "school-erp-builder",
+    "version": "1.0.0",
+    "description": "Build a school ERP and remove all authentication."
+  },
+  "assumptions": [],
+  "intent": {
+    "app_type": "school_erp",
+    "domain": "school_erp",
+    "primary_goal": "Build a school ERP and remove all authentication.",
+    "features": [
+      "attendance",
+      "exams",
+      "fees"
+    ],
+    "requested_entities": [
+      "student",
+      "teacher",
+      "attendance",
+      "exam",
+      "fee"
+    ],
+    "requested_roles": [
+      "user"
+    ],
+    "auth_required": false,
+    "payments_required": false,
+    "analytics_required": false,
+    "premium_required": false,
+    "crud_required": true,
+    "ambiguities": [],
+    "conflicts": [],
+    "missing_details": [],
+    "assumptions": []
+  },
+  "design": {
+    "architecture": "config-driven full-stack application",
+    "modules": [
+      "ui",
+      "api",
+      "database",
+      "auth",
+      "validation",
+      "runtime_simulation"
+    ],
+    "entities": [
+      {
+        "name": "student",
+        "description": "Student records used by the school_erp app.",
+        "fields": [
+          "id",
+          "name",
+          "email",
+          "grade",
+          "created_at"
+        ]
+      },
+      {
+        "name": "teacher",
+        "description": "Teacher records used by the school_erp app.",
+        "fields": [
+          "id",
+          "name",
+          "email",
+          "subject",
+          "created_at"
+        ]
+      },
+      {
+        "name": "attendance",
+        "description": "Attendance records used by the school_erp app.",
+        "fields": [
+          "id",
+          "student_id",
+          "status",
+          "recorded_at"
+        ]
+      },
+      {
+        "name": "exam",
+        "description": "Exam records used by the school_erp app.",
+        "fields": [
+          "id",
+          "name",
+          "scheduled_at",
+          "created_at"
+        ]
+      },
+      {
+        "name": "fee",
+        "description": "Fee records used by the school_erp app.",
+        "fields": [
+          "id",
+          "student_id",
+          "amount",
+          "status",
+          "created_at"
+        ]
+      }
+    ],
+    "roles": [
+      "user"
+    ],
+    "user_flows": [
+      "login",
+      "dashboard",
+      "manage students",
+      "manage teachers",
+      "manage attendances",
+      "manage exams",
+      "manage fees"
+    ],
+    "access_model": {
+      "default_read_roles": [
+        "user"
+      ],
+      "write_roles": [
+        "user"
+      ],
+      "admin_only": [
+        "analytics",
+        "user_management"
+      ],
+      "premium_requires": null
+    },
+    "data_model_summary": "5 domain entities compiled into relational tables with inferred relationships.",
+    "business_rules_summary": "Role access, ownership checks, CRUD permissions, and audit-safe persistence.",
+    "risk_notes": [],
+    "app_name": "School Erp Builder",
+    "summary": "Build a school ERP and remove all authentication.",
+    "premium_required": false,
+    "analytics_required": false,
+    "payments_required": false
+  },
+  "entities": [
+    {
+      "name": "student",
+      "table": "students",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "grade",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "teacher",
+      "table": "teachers",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "attendance",
+      "table": "attendances",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "student_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "recorded_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "exam",
+      "table": "exams",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "scheduled_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "fee",
+      "table": "fees",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "student_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "amount",
+          "type": "currency",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "layout": "auth",
+        "components": [
+          {
+            "name": "Login Form",
+            "type": "form",
+            "entity": "user"
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "layout": "dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Summary Metrics",
+            "type": "metric",
+            "entity": "student"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:student",
+          "use:premium"
+        ],
+        "premium_required": true
+      },
+      {
+        "name": "Students",
+        "route": "/students",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Student Table",
+            "type": "table",
+            "entity": "student"
+          },
+          {
+            "name": "Student Form",
+            "type": "form",
+            "entity": "student"
+          }
+        ],
+        "forms": [
+          {
+            "name": "student_form",
+            "entity": "student",
+            "fields": [
+              "name",
+              "email",
+              "grade"
+            ],
+            "submit_endpoint": "/api/students"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:student",
+          "write:student"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Teachers",
+        "route": "/teachers",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Teacher Table",
+            "type": "table",
+            "entity": "teacher"
+          },
+          {
+            "name": "Teacher Form",
+            "type": "form",
+            "entity": "teacher"
+          }
+        ],
+        "forms": [
+          {
+            "name": "teacher_form",
+            "entity": "teacher",
+            "fields": [
+              "name",
+              "email",
+              "subject"
+            ],
+            "submit_endpoint": "/api/teachers"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:teacher",
+          "write:teacher"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Attendances",
+        "route": "/attendances",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Attendance Table",
+            "type": "table",
+            "entity": "attendance"
+          },
+          {
+            "name": "Attendance Form",
+            "type": "form",
+            "entity": "attendance"
+          }
+        ],
+        "forms": [
+          {
+            "name": "attendance_form",
+            "entity": "attendance",
+            "fields": [
+              "student_id",
+              "status",
+              "recorded_at"
+            ],
+            "submit_endpoint": "/api/attendances"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:attendance",
+          "write:attendance"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Exams",
+        "route": "/exams",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Exam Table",
+            "type": "table",
+            "entity": "exam"
+          },
+          {
+            "name": "Exam Form",
+            "type": "form",
+            "entity": "exam"
+          }
+        ],
+        "forms": [
+          {
+            "name": "exam_form",
+            "entity": "exam",
+            "fields": [
+              "name",
+              "scheduled_at"
+            ],
+            "submit_endpoint": "/api/exams"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:exam",
+          "write:exam"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Fees",
+        "route": "/fees",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Fee Table",
+            "type": "table",
+            "entity": "fee"
+          },
+          {
+            "name": "Fee Form",
+            "type": "form",
+            "entity": "fee"
+          }
+        ],
+        "forms": [
+          {
+            "name": "fee_form",
+            "entity": "fee",
+            "fields": [
+              "student_id",
+              "amount",
+              "status"
+            ],
+            "submit_endpoint": "/api/fees"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:fee",
+          "write:fee"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "validations": [
+          "password_hash_transform"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      },
+      {
+        "name": "get_students",
+        "method": "GET",
+        "path": "/api/students",
+        "entity": "student",
+        "table": "students",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:student"
+        ]
+      },
+      {
+        "name": "post_students",
+        "method": "POST",
+        "path": "/api/students",
+        "entity": "student",
+        "table": "students",
+        "body_fields": [
+          "name",
+          "email",
+          "grade"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:student"
+        ]
+      },
+      {
+        "name": "get_teachers",
+        "method": "GET",
+        "path": "/api/teachers",
+        "entity": "teacher",
+        "table": "teachers",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:teacher"
+        ]
+      },
+      {
+        "name": "post_teachers",
+        "method": "POST",
+        "path": "/api/teachers",
+        "entity": "teacher",
+        "table": "teachers",
+        "body_fields": [
+          "name",
+          "email",
+          "subject"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:teacher"
+        ]
+      },
+      {
+        "name": "get_attendances",
+        "method": "GET",
+        "path": "/api/attendances",
+        "entity": "attendance",
+        "table": "attendances",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:attendance"
+        ]
+      },
+      {
+        "name": "post_attendances",
+        "method": "POST",
+        "path": "/api/attendances",
+        "entity": "attendance",
+        "table": "attendances",
+        "body_fields": [
+          "student_id",
+          "status"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:attendance"
+        ]
+      },
+      {
+        "name": "get_exams",
+        "method": "GET",
+        "path": "/api/exams",
+        "entity": "exam",
+        "table": "exams",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:exam"
+        ]
+      },
+      {
+        "name": "post_exams",
+        "method": "POST",
+        "path": "/api/exams",
+        "entity": "exam",
+        "table": "exams",
+        "body_fields": [
+          "name",
+          "scheduled_at"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:exam"
+        ]
+      },
+      {
+        "name": "get_fees",
+        "method": "GET",
+        "path": "/api/fees",
+        "entity": "fee",
+        "table": "fees",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:fee"
+        ]
+      },
+      {
+        "name": "post_fees",
+        "method": "POST",
+        "path": "/api/fees",
+        "entity": "fee",
+        "table": "fees",
+        "body_fields": [
+          "student_id",
+          "amount",
+          "status"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:fee"
+        ]
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "students",
+        "entity": "student",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "grade",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "teachers",
+        "entity": "teacher",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "subject",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "attendances",
+        "entity": "attendance",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "student_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "recorded_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "exams",
+        "entity": "exam",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "scheduled_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "fees",
+        "entity": "fee",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "student_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "amount",
+            "type": "currency",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "attendances",
+        "to_table": "students",
+        "type": "one_to_many",
+        "field": "student_id"
+      },
+      {
+        "from_table": "fees",
+        "to_table": "students",
+        "type": "one_to_many",
+        "field": "student_id"
+      }
+    ]
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "user",
+        "description": "User role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "delete:attendance",
+        "description": "Allows delete:attendance",
+        "roles": []
+      },
+      {
+        "name": "delete:exam",
+        "description": "Allows delete:exam",
+        "roles": []
+      },
+      {
+        "name": "delete:fee",
+        "description": "Allows delete:fee",
+        "roles": []
+      },
+      {
+        "name": "delete:student",
+        "description": "Allows delete:student",
+        "roles": []
+      },
+      {
+        "name": "delete:teacher",
+        "description": "Allows delete:teacher",
+        "roles": []
+      },
+      {
+        "name": "manage:attendance",
+        "description": "Allows manage:attendance",
+        "roles": []
+      },
+      {
+        "name": "manage:exam",
+        "description": "Allows manage:exam",
+        "roles": []
+      },
+      {
+        "name": "manage:fee",
+        "description": "Allows manage:fee",
+        "roles": []
+      },
+      {
+        "name": "manage:student",
+        "description": "Allows manage:student",
+        "roles": []
+      },
+      {
+        "name": "manage:teacher",
+        "description": "Allows manage:teacher",
+        "roles": []
+      },
+      {
+        "name": "manage:users",
+        "description": "Allows manage:users",
+        "roles": []
+      },
+      {
+        "name": "read:attendance",
+        "description": "Allows read:attendance",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:exam",
+        "description": "Allows read:exam",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:fee",
+        "description": "Allows read:fee",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:student",
+        "description": "Allows read:student",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:teacher",
+        "description": "Allows read:teacher",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:attendance",
+        "description": "Allows write:attendance",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:exam",
+        "description": "Allows write:exam",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:fee",
+        "description": "Allows write:fee",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:student",
+        "description": "Allows write:student",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:teacher",
+        "description": "Allows write:teacher",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "use:premium",
+        "description": "Auto-added missing permission use:premium",
+        "roles": [
+          "user"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "role-access",
+      "description": "Protected pages and APIs require declared roles and permissions.",
+      "expression": "all(required_permissions in user.permissions)",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "ownership-restriction",
+      "description": "Users may update only records they own unless they have manage permission.",
+      "expression": "record.owner_id == user.id or user.has_manage_permission",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "premium-gating",
+      "description": "Premium features require active subscription and use:premium permission.",
+      "expression": "user.subscription.status == 'active' and 'use:premium' in user.permissions",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": true,
+    "repair_count": 1
+  },
+  "repair_history": [
+    {
+      "issue_code": "MISSING_PERMISSION",
+      "location": "ui.pages./dashboard",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 7,
+          "endpoints": 11,
+          "tables": 6
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 7,
+          "endpoints": 11,
+          "tables": 6
+        }
+      },
+      "repair": "Applied localized repair for MISSING_PERMISSION.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "PREMIUM_RULE_MISSING",
+      "location": "business_logic",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 7,
+          "endpoints": 11,
+          "tables": 6
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 7,
+          "endpoints": 11,
+          "tables": 6
+        }
+      },
+      "repair": "Applied localized repair for PREMIUM_RULE_MISSING.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    }
+  ],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "rendered page Login with auth layout",
+      "rendered component Login Form",
+      "registered route /dashboard",
+      "rendered page Dashboard with dashboard layout",
+      "rendered component Navigation",
+      "rendered component Summary Metrics",
+      "registered route /students",
+      "rendered page Students with crud layout",
+      "rendered component Student Table",
+      "rendered component Student Form",
+      "registered route /teachers",
+      "rendered page Teachers with crud layout",
+      "rendered component Teacher Table",
+      "rendered component Teacher Form",
+      "registered route /attendances",
+      "rendered page Attendances with crud layout",
+      "rendered component Attendance Table",
+      "rendered component Attendance Form",
+      "registered route /exams",
+      "rendered page Exams with crud layout",
+      "rendered component Exam Table",
+      "rendered component Exam Form",
+      "registered route /fees",
+      "rendered page Fees with crud layout",
+      "rendered component Fee Table",
+      "rendered component Fee Form",
+      "created table students(created_at, email, grade, id, name)",
+      "created table teachers(created_at, email, id, name, subject)",
+      "created table attendances(id, recorded_at, status, student_id)",
+      "created table exams(created_at, id, name, scheduled_at)",
+      "created table fees(amount, created_at, id, status, student_id)",
+      "created table users(email, id, password_hash, role)",
+      "created relationship attendances.student_id -> students",
+      "created relationship fees.student_id -> students",
+      "registered endpoint POST /api/auth/login",
+      "bound POST /api/auth/login to users",
+      "registered endpoint GET /api/students",
+      "bound GET /api/students to students",
+      "registered endpoint POST /api/students",
+      "bound POST /api/students to students",
+      "registered endpoint GET /api/teachers",
+      "bound GET /api/teachers to teachers",
+      "registered endpoint POST /api/teachers",
+      "bound POST /api/teachers to teachers",
+      "registered endpoint GET /api/attendances",
+      "bound GET /api/attendances to attendances",
+      "registered endpoint POST /api/attendances",
+      "bound POST /api/attendances to attendances",
+      "registered endpoint GET /api/exams",
+      "bound GET /api/exams to exams",
+      "registered endpoint POST /api/exams",
+      "bound POST /api/exams to exams",
+      "registered endpoint GET /api/fees",
+      "bound GET /api/fees to fees",
+      "registered endpoint POST /api/fees",
+      "bound POST /api/fees to fees",
+      "loaded auth role user",
+      "loaded permission delete:attendance",
+      "loaded permission delete:exam",
+      "loaded permission delete:fee",
+      "loaded permission delete:student",
+      "loaded permission delete:teacher",
+      "loaded permission manage:attendance",
+      "loaded permission manage:exam",
+      "loaded permission manage:fee",
+      "loaded permission manage:student",
+      "loaded permission manage:teacher",
+      "loaded permission manage:users",
+      "loaded permission read:attendance",
+      "loaded permission read:exam",
+      "loaded permission read:fee",
+      "loaded permission read:student",
+      "loaded permission read:teacher",
+      "loaded permission write:attendance",
+      "loaded permission write:exam",
+      "loaded permission write:fee",
+      "loaded permission write:student",
+      "loaded permission write:teacher",
+      "loaded permission use:premium",
+      "verified form login_form submits to /api/auth/login",
+      "checked permission read:student for /dashboard",
+      "checked permission use:premium for /dashboard",
+      "checked permission read:student for /students",
+      "checked permission write:student for /students",
+      "verified form student_form submits to /api/students",
+      "checked permission read:teacher for /teachers",
+      "checked permission write:teacher for /teachers",
+      "verified form teacher_form submits to /api/teachers",
+      "checked permission read:attendance for /attendances",
+      "checked permission write:attendance for /attendances",
+      "verified form attendance_form submits to /api/attendances",
+      "checked permission read:exam for /exams",
+      "checked permission write:exam for /exams",
+      "verified form exam_form submits to /api/exams",
+      "checked permission read:fee for /fees",
+      "checked permission write:fee for /fees",
+      "verified form fee_form submits to /api/fees",
+      "compiled business rule role-access",
+      "compiled business rule ownership-restriction",
+      "compiled business rule premium-gating",
+      "verified premium gating check"
+    ],
+    "errors": []
+  },
+  "quality_metrics": {
+    "consistency_score": 95,
+    "execution_readiness_score": 96,
+    "schema_completeness_score": 94,
+    "repairability_score": 92
+  }
+}

@@ -1,0 +1,1338 @@
+{
+  "pipeline": {
+    "id": "a5a16719-afdf-5d1a-b5ed-2ffa9cc03db5",
+    "input_prompt": "Build a premium SaaS app but do not include billing.",
+    "stage_status": [
+      {
+        "stage": "intent_extraction",
+        "status": "passed",
+        "latency_ms": 0.09,
+        "summary": "Extracted structured intent."
+      },
+      {
+        "stage": "system_design",
+        "status": "passed",
+        "latency_ms": 0.1,
+        "summary": "Designed config-driven architecture."
+      },
+      {
+        "stage": "schema_generation",
+        "status": "passed",
+        "latency_ms": 0.85,
+        "summary": "Generated strict app_config schema."
+      },
+      {
+        "stage": "refinement",
+        "status": "passed",
+        "latency_ms": 1.99,
+        "summary": "Normalized permissions, deduped surfaces, and completed business rules."
+      },
+      {
+        "stage": "validation",
+        "status": "failed",
+        "latency_ms": 0.2,
+        "summary": "2 errors, 0 warnings."
+      },
+      {
+        "stage": "repair",
+        "status": "passed",
+        "latency_ms": 4.97,
+        "summary": "Applied 2 localized repair pass(es)."
+      },
+      {
+        "stage": "execution_simulation",
+        "status": "passed",
+        "latency_ms": 0.1,
+        "summary": "Simulated routes, UI, API, DB, auth, permissions, and business rules."
+      }
+    ],
+    "total_latency_ms": 8.42,
+    "deterministic_mode": true,
+    "injected_fault": "remove_permission"
+  },
+  "app": {
+    "name": "Saas Dashboard Builder",
+    "slug": "saas-dashboard-builder",
+    "version": "1.0.0",
+    "description": "Build a premium SaaS app but do not include billing."
+  },
+  "assumptions": [],
+  "intent": {
+    "app_type": "saas_dashboard",
+    "domain": "saas_dashboard",
+    "primary_goal": "Build a premium SaaS app but do not include billing.",
+    "features": [
+      "dashboard",
+      "billing",
+      "payments"
+    ],
+    "requested_entities": [
+      "workspace",
+      "subscription",
+      "metric",
+      "payment"
+    ],
+    "requested_roles": [
+      "user"
+    ],
+    "auth_required": true,
+    "payments_required": true,
+    "analytics_required": false,
+    "premium_required": true,
+    "crud_required": true,
+    "ambiguities": [],
+    "conflicts": [],
+    "missing_details": [],
+    "assumptions": []
+  },
+  "design": {
+    "architecture": "config-driven full-stack application",
+    "modules": [
+      "ui",
+      "api",
+      "database",
+      "auth",
+      "validation",
+      "runtime_simulation",
+      "billing"
+    ],
+    "entities": [
+      {
+        "name": "workspace",
+        "description": "Workspace records used by the saas_dashboard app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "subscription",
+        "description": "Subscription records used by the saas_dashboard app.",
+        "fields": [
+          "id",
+          "user_id",
+          "plan",
+          "status",
+          "renewal_at"
+        ]
+      },
+      {
+        "name": "metric",
+        "description": "Metric records used by the saas_dashboard app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "payment",
+        "description": "Payment records used by the saas_dashboard app.",
+        "fields": [
+          "id",
+          "subscription_id",
+          "amount",
+          "status",
+          "created_at"
+        ]
+      }
+    ],
+    "roles": [
+      "user"
+    ],
+    "user_flows": [
+      "login",
+      "dashboard",
+      "manage workspaces",
+      "manage subscriptions",
+      "manage metrics",
+      "manage payments",
+      "billing and payment management"
+    ],
+    "access_model": {
+      "default_read_roles": [
+        "user"
+      ],
+      "write_roles": [
+        "user"
+      ],
+      "admin_only": [
+        "analytics",
+        "user_management"
+      ],
+      "premium_requires": "active subscription"
+    },
+    "data_model_summary": "4 domain entities compiled into relational tables with inferred relationships.",
+    "business_rules_summary": "Role access, ownership checks, CRUD permissions, and audit-safe persistence. Premium features require active subscription and use:premium permission.",
+    "risk_notes": [],
+    "app_name": "Saas Dashboard Builder",
+    "summary": "Build a premium SaaS app but do not include billing.",
+    "premium_required": true,
+    "analytics_required": false,
+    "payments_required": true
+  },
+  "entities": [
+    {
+      "name": "workspace",
+      "table": "workspaces",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "subscription",
+      "table": "subscriptions",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "user_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "plan",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "renewal_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "metric",
+      "table": "metrics",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "payment",
+      "table": "payments",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "subscription_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "amount",
+          "type": "currency",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "layout": "auth",
+        "components": [
+          {
+            "name": "Login Form",
+            "type": "form",
+            "entity": "user"
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "layout": "dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Summary Metrics",
+            "type": "metric",
+            "entity": "workspace"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:workspace"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Workspaces",
+        "route": "/workspaces",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Workspace Table",
+            "type": "table",
+            "entity": "workspace"
+          },
+          {
+            "name": "Workspace Form",
+            "type": "form",
+            "entity": "workspace"
+          }
+        ],
+        "forms": [
+          {
+            "name": "workspace_form",
+            "entity": "workspace",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/workspaces"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:workspace",
+          "write:workspace"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Subscriptions",
+        "route": "/subscriptions",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Subscription Table",
+            "type": "table",
+            "entity": "subscription"
+          },
+          {
+            "name": "Subscription Form",
+            "type": "form",
+            "entity": "subscription"
+          }
+        ],
+        "forms": [
+          {
+            "name": "subscription_form",
+            "entity": "subscription",
+            "fields": [
+              "user_id",
+              "plan",
+              "status",
+              "renewal_at"
+            ],
+            "submit_endpoint": "/api/subscriptions"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:subscription",
+          "manage:billing",
+          "use:premium",
+          "write:subscription"
+        ],
+        "premium_required": true
+      },
+      {
+        "name": "Metrics",
+        "route": "/metrics",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Metric Table",
+            "type": "table",
+            "entity": "metric"
+          },
+          {
+            "name": "Metric Form",
+            "type": "form",
+            "entity": "metric"
+          }
+        ],
+        "forms": [
+          {
+            "name": "metric_form",
+            "entity": "metric",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/metrics"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:metric",
+          "write:metric"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Payments",
+        "route": "/payments",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Payment Table",
+            "type": "table",
+            "entity": "payment"
+          },
+          {
+            "name": "Payment Form",
+            "type": "form",
+            "entity": "payment"
+          }
+        ],
+        "forms": [
+          {
+            "name": "payment_form",
+            "entity": "payment",
+            "fields": [
+              "subscription_id",
+              "amount",
+              "status"
+            ],
+            "submit_endpoint": "/api/payments"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:payment",
+          "manage:billing",
+          "use:premium",
+          "write:payment"
+        ],
+        "premium_required": true
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "validations": [
+          "password_hash_transform"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      },
+      {
+        "name": "get_workspaces",
+        "method": "GET",
+        "path": "/api/workspaces",
+        "entity": "workspace",
+        "table": "workspaces",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:workspace"
+        ]
+      },
+      {
+        "name": "post_workspaces",
+        "method": "POST",
+        "path": "/api/workspaces",
+        "entity": "workspace",
+        "table": "workspaces",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:workspace"
+        ]
+      },
+      {
+        "name": "get_subscriptions",
+        "method": "GET",
+        "path": "/api/subscriptions",
+        "entity": "subscription",
+        "table": "subscriptions",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:subscription"
+        ]
+      },
+      {
+        "name": "post_subscriptions",
+        "method": "POST",
+        "path": "/api/subscriptions",
+        "entity": "subscription",
+        "table": "subscriptions",
+        "body_fields": [
+          "user_id",
+          "plan",
+          "status",
+          "renewal_at"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:subscription"
+        ]
+      },
+      {
+        "name": "get_metrics",
+        "method": "GET",
+        "path": "/api/metrics",
+        "entity": "metric",
+        "table": "metrics",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:metric"
+        ]
+      },
+      {
+        "name": "post_metrics",
+        "method": "POST",
+        "path": "/api/metrics",
+        "entity": "metric",
+        "table": "metrics",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:metric"
+        ]
+      },
+      {
+        "name": "get_payments",
+        "method": "GET",
+        "path": "/api/payments",
+        "entity": "payment",
+        "table": "payments",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:payment"
+        ]
+      },
+      {
+        "name": "post_payments",
+        "method": "POST",
+        "path": "/api/payments",
+        "entity": "payment",
+        "table": "payments",
+        "body_fields": [
+          "subscription_id",
+          "amount",
+          "status"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:payment"
+        ]
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "workspaces",
+        "entity": "workspace",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "subscriptions",
+        "entity": "subscription",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "user_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "plan",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "renewal_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "metrics",
+        "entity": "metric",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "payments",
+        "entity": "payment",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "subscription_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "amount",
+            "type": "currency",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "subscriptions",
+        "to_table": "users",
+        "type": "one_to_many",
+        "field": "user_id"
+      },
+      {
+        "from_table": "payments",
+        "to_table": "subscriptions",
+        "type": "one_to_many",
+        "field": "subscription_id"
+      }
+    ]
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "user",
+        "description": "User role"
+      },
+      {
+        "name": "admin",
+        "description": "Auto-added missing role admin"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "delete:metric",
+        "description": "Allows delete:metric",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:payment",
+        "description": "Allows delete:payment",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:subscription",
+        "description": "Allows delete:subscription",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:workspace",
+        "description": "Allows delete:workspace",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:metric",
+        "description": "Allows manage:metric",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:payment",
+        "description": "Allows manage:payment",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:subscription",
+        "description": "Allows manage:subscription",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:users",
+        "description": "Allows manage:users",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:workspace",
+        "description": "Allows manage:workspace",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "read:metric",
+        "description": "Allows read:metric",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:payment",
+        "description": "Allows read:payment",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:subscription",
+        "description": "Allows read:subscription",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:workspace",
+        "description": "Allows read:workspace",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "use:premium",
+        "description": "Allows use:premium",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:metric",
+        "description": "Allows write:metric",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:payment",
+        "description": "Allows write:payment",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:subscription",
+        "description": "Allows write:subscription",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:workspace",
+        "description": "Allows write:workspace",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "manage:billing",
+        "description": "Auto-added missing permission manage:billing",
+        "roles": [
+          "admin"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "role-access",
+      "description": "Protected pages and APIs require declared roles and permissions.",
+      "expression": "all(required_permissions in user.permissions)",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "ownership-restriction",
+      "description": "Users may update only records they own unless they have manage permission.",
+      "expression": "record.owner_id == user.id or user.has_manage_permission",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "premium-gating",
+      "description": "Premium features require active subscription and use:premium permission.",
+      "expression": "user.subscription.status == 'active' and 'use:premium' in user.permissions",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "payment-access",
+      "description": "Billing operations require manage:billing permission.",
+      "expression": "'manage:billing' in user.permissions",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": true,
+    "repair_count": 2
+  },
+  "repair_history": [
+    {
+      "issue_code": "MISSING_PERMISSION",
+      "location": "ui.pages./subscriptions",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_PERMISSION.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_PERMISSION",
+      "location": "ui.pages./payments",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_PERMISSION.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "PERMISSION_REFERENCES_MISSING_ROLE",
+      "location": "auth.permissions.manage:billing",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for PERMISSION_REFERENCES_MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    }
+  ],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "rendered page Login with auth layout",
+      "rendered component Login Form",
+      "registered route /dashboard",
+      "rendered page Dashboard with dashboard layout",
+      "rendered component Navigation",
+      "rendered component Summary Metrics",
+      "registered route /workspaces",
+      "rendered page Workspaces with crud layout",
+      "rendered component Workspace Table",
+      "rendered component Workspace Form",
+      "registered route /subscriptions",
+      "rendered page Subscriptions with crud layout",
+      "rendered component Subscription Table",
+      "rendered component Subscription Form",
+      "registered route /metrics",
+      "rendered page Metrics with crud layout",
+      "rendered component Metric Table",
+      "rendered component Metric Form",
+      "registered route /payments",
+      "rendered page Payments with crud layout",
+      "rendered component Payment Table",
+      "rendered component Payment Form",
+      "created table workspaces(created_at, description, id, name, owner_id)",
+      "created table subscriptions(id, plan, renewal_at, status, user_id)",
+      "created table metrics(created_at, description, id, name, owner_id)",
+      "created table payments(amount, created_at, id, status, subscription_id)",
+      "created table users(email, id, password_hash, role)",
+      "created relationship subscriptions.user_id -> users",
+      "created relationship payments.subscription_id -> subscriptions",
+      "registered endpoint POST /api/auth/login",
+      "bound POST /api/auth/login to users",
+      "registered endpoint GET /api/workspaces",
+      "bound GET /api/workspaces to workspaces",
+      "registered endpoint POST /api/workspaces",
+      "bound POST /api/workspaces to workspaces",
+      "registered endpoint GET /api/subscriptions",
+      "bound GET /api/subscriptions to subscriptions",
+      "registered endpoint POST /api/subscriptions",
+      "bound POST /api/subscriptions to subscriptions",
+      "registered endpoint GET /api/metrics",
+      "bound GET /api/metrics to metrics",
+      "registered endpoint POST /api/metrics",
+      "bound POST /api/metrics to metrics",
+      "registered endpoint GET /api/payments",
+      "bound GET /api/payments to payments",
+      "registered endpoint POST /api/payments",
+      "bound POST /api/payments to payments",
+      "loaded auth role user",
+      "loaded auth role admin",
+      "loaded permission delete:metric",
+      "loaded permission delete:payment",
+      "loaded permission delete:subscription",
+      "loaded permission delete:workspace",
+      "loaded permission manage:metric",
+      "loaded permission manage:payment",
+      "loaded permission manage:subscription",
+      "loaded permission manage:users",
+      "loaded permission manage:workspace",
+      "loaded permission read:metric",
+      "loaded permission read:payment",
+      "loaded permission read:subscription",
+      "loaded permission read:workspace",
+      "loaded permission use:premium",
+      "loaded permission write:metric",
+      "loaded permission write:payment",
+      "loaded permission write:subscription",
+      "loaded permission write:workspace",
+      "loaded permission manage:billing",
+      "verified form login_form submits to /api/auth/login",
+      "checked permission read:workspace for /dashboard",
+      "checked permission read:workspace for /workspaces",
+      "checked permission write:workspace for /workspaces",
+      "verified form workspace_form submits to /api/workspaces",
+      "checked permission read:subscription for /subscriptions",
+      "checked permission manage:billing for /subscriptions",
+      "checked permission use:premium for /subscriptions",
+      "checked permission write:subscription for /subscriptions",
+      "verified form subscription_form submits to /api/subscriptions",
+      "checked permission read:metric for /metrics",
+      "checked permission write:metric for /metrics",
+      "verified form metric_form submits to /api/metrics",
+      "checked permission read:payment for /payments",
+      "checked permission manage:billing for /payments",
+      "checked permission use:premium for /payments",
+      "checked permission write:payment for /payments",
+      "verified form payment_form submits to /api/payments",
+      "compiled business rule role-access",
+      "compiled business rule ownership-restriction",
+      "compiled business rule premium-gating",
+      "compiled business rule payment-access",
+      "verified premium gating check"
+    ],
+    "errors": []
+  },
+  "quality_metrics": {
+    "consistency_score": 95,
+    "execution_readiness_score": 96,
+    "schema_completeness_score": 94,
+    "repairability_score": 92
+  }
+}

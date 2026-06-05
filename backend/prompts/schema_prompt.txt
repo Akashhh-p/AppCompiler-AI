@@ -1,0 +1,3 @@
+Compile a system design into strict executable app_config JSON. Every UI
+reference must map to API, API must map to database, roles must map to
+permissions, and premium/admin behavior must be represented as business rules.

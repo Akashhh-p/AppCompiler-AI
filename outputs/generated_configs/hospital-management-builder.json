@@ -1,0 +1,1165 @@
+{
+  "pipeline": {
+    "id": "a9c340b8-32f2-57cf-84cf-094103e87f70",
+    "input_prompt": "Build a hospital appointment system with doctors, patients, appointments, prescriptions, and receptionist role.",
+    "stage_status": [
+      {
+        "stage": "intent_extraction",
+        "status": "passed",
+        "latency_ms": 0.33,
+        "summary": "Extracted structured intent."
+      },
+      {
+        "stage": "system_design",
+        "status": "passed",
+        "latency_ms": 0.34,
+        "summary": "Designed config-driven architecture."
+      },
+      {
+        "stage": "schema_generation",
+        "status": "passed",
+        "latency_ms": 1.82,
+        "summary": "Generated strict app_config schema."
+      },
+      {
+        "stage": "refinement",
+        "status": "passed",
+        "latency_ms": 3.31,
+        "summary": "Normalized permissions, deduped surfaces, and completed business rules."
+      },
+      {
+        "stage": "validation",
+        "status": "passed",
+        "latency_ms": 0.25,
+        "summary": "0 errors, 0 warnings."
+      },
+      {
+        "stage": "repair",
+        "status": "skipped",
+        "latency_ms": 0.04,
+        "summary": "No repair needed."
+      },
+      {
+        "stage": "execution_simulation",
+        "status": "passed",
+        "latency_ms": 0.2,
+        "summary": "Simulated routes, UI, API, DB, auth, permissions, and business rules."
+      }
+    ],
+    "total_latency_ms": 6.44,
+    "deterministic_mode": true,
+    "injected_fault": null
+  },
+  "app": {
+    "name": "Hospital Management Builder",
+    "slug": "hospital-management-builder",
+    "version": "1.0.0",
+    "description": "Build a hospital appointment system with doctors, patients, appointments, prescriptions, and receptionist role."
+  },
+  "assumptions": [],
+  "intent": {
+    "app_type": "hospital_management",
+    "domain": "hospital_management",
+    "primary_goal": "Build a hospital appointment system with doctors, patients, appointments, prescriptions, and receptionist role.",
+    "features": [
+      "appointments",
+      "patients"
+    ],
+    "requested_entities": [
+      "doctor",
+      "patient",
+      "appointment",
+      "prescription"
+    ],
+    "requested_roles": [
+      "user",
+      "receptionist",
+      "doctor"
+    ],
+    "auth_required": true,
+    "payments_required": false,
+    "analytics_required": false,
+    "premium_required": false,
+    "crud_required": true,
+    "ambiguities": [],
+    "conflicts": [],
+    "missing_details": [],
+    "assumptions": []
+  },
+  "design": {
+    "architecture": "config-driven full-stack application",
+    "modules": [
+      "ui",
+      "api",
+      "database",
+      "auth",
+      "validation",
+      "runtime_simulation"
+    ],
+    "entities": [
+      {
+        "name": "doctor",
+        "description": "Doctor records used by the hospital_management app.",
+        "fields": [
+          "id",
+          "name",
+          "specialty",
+          "email",
+          "created_at"
+        ]
+      },
+      {
+        "name": "patient",
+        "description": "Patient records used by the hospital_management app.",
+        "fields": [
+          "id",
+          "name",
+          "email",
+          "phone",
+          "created_at"
+        ]
+      },
+      {
+        "name": "appointment",
+        "description": "Appointment records used by the hospital_management app.",
+        "fields": [
+          "id",
+          "doctor_id",
+          "patient_id",
+          "scheduled_at",
+          "status",
+          "created_at"
+        ]
+      },
+      {
+        "name": "prescription",
+        "description": "Prescription records used by the hospital_management app.",
+        "fields": [
+          "id",
+          "appointment_id",
+          "notes",
+          "created_at"
+        ]
+      }
+    ],
+    "roles": [
+      "user",
+      "receptionist",
+      "doctor"
+    ],
+    "user_flows": [
+      "login",
+      "dashboard",
+      "manage doctors",
+      "manage patients",
+      "manage appointments",
+      "manage prescriptions"
+    ],
+    "access_model": {
+      "default_read_roles": [
+        "user",
+        "receptionist",
+        "doctor"
+      ],
+      "write_roles": [
+        "user",
+        "receptionist",
+        "doctor"
+      ],
+      "admin_only": [
+        "analytics",
+        "user_management"
+      ],
+      "premium_requires": null
+    },
+    "data_model_summary": "4 domain entities compiled into relational tables with inferred relationships.",
+    "business_rules_summary": "Role access, ownership checks, CRUD permissions, and audit-safe persistence.",
+    "risk_notes": [],
+    "app_name": "Hospital Management Builder",
+    "summary": "Build a hospital appointment system with doctors, patients, appointments, prescriptions, and receptionist role.",
+    "premium_required": false,
+    "analytics_required": false,
+    "payments_required": false
+  },
+  "entities": [
+    {
+      "name": "doctor",
+      "table": "doctors",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "specialty",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "patient",
+      "table": "patients",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "phone",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "appointment",
+      "table": "appointments",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "doctor_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "patient_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "scheduled_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "prescription",
+      "table": "prescriptions",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "appointment_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "notes",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "layout": "auth",
+        "components": [
+          {
+            "name": "Login Form",
+            "type": "form",
+            "entity": "user"
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "layout": "dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Summary Metrics",
+            "type": "metric",
+            "entity": "doctor"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:doctor"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Doctors",
+        "route": "/doctors",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Doctor Table",
+            "type": "table",
+            "entity": "doctor"
+          },
+          {
+            "name": "Doctor Form",
+            "type": "form",
+            "entity": "doctor"
+          }
+        ],
+        "forms": [
+          {
+            "name": "doctor_form",
+            "entity": "doctor",
+            "fields": [
+              "name",
+              "specialty",
+              "email"
+            ],
+            "submit_endpoint": "/api/doctors"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:doctor",
+          "write:doctor"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Patients",
+        "route": "/patients",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Patient Table",
+            "type": "table",
+            "entity": "patient"
+          },
+          {
+            "name": "Patient Form",
+            "type": "form",
+            "entity": "patient"
+          }
+        ],
+        "forms": [
+          {
+            "name": "patient_form",
+            "entity": "patient",
+            "fields": [
+              "name",
+              "email",
+              "phone"
+            ],
+            "submit_endpoint": "/api/patients"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:patient",
+          "write:patient"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Appointments",
+        "route": "/appointments",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Appointment Table",
+            "type": "table",
+            "entity": "appointment"
+          },
+          {
+            "name": "Appointment Form",
+            "type": "form",
+            "entity": "appointment"
+          }
+        ],
+        "forms": [
+          {
+            "name": "appointment_form",
+            "entity": "appointment",
+            "fields": [
+              "doctor_id",
+              "patient_id",
+              "scheduled_at",
+              "status"
+            ],
+            "submit_endpoint": "/api/appointments"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:appointment",
+          "write:appointment"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Prescriptions",
+        "route": "/prescriptions",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Prescription Table",
+            "type": "table",
+            "entity": "prescription"
+          },
+          {
+            "name": "Prescription Form",
+            "type": "form",
+            "entity": "prescription"
+          }
+        ],
+        "forms": [
+          {
+            "name": "prescription_form",
+            "entity": "prescription",
+            "fields": [
+              "appointment_id",
+              "notes"
+            ],
+            "submit_endpoint": "/api/prescriptions"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:prescription",
+          "write:prescription"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "validations": [
+          "password_hash_transform"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      },
+      {
+        "name": "get_doctors",
+        "method": "GET",
+        "path": "/api/doctors",
+        "entity": "doctor",
+        "table": "doctors",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:doctor"
+        ]
+      },
+      {
+        "name": "post_doctors",
+        "method": "POST",
+        "path": "/api/doctors",
+        "entity": "doctor",
+        "table": "doctors",
+        "body_fields": [
+          "name",
+          "specialty",
+          "email"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:doctor"
+        ]
+      },
+      {
+        "name": "get_patients",
+        "method": "GET",
+        "path": "/api/patients",
+        "entity": "patient",
+        "table": "patients",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:patient"
+        ]
+      },
+      {
+        "name": "post_patients",
+        "method": "POST",
+        "path": "/api/patients",
+        "entity": "patient",
+        "table": "patients",
+        "body_fields": [
+          "name",
+          "email",
+          "phone"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:patient"
+        ]
+      },
+      {
+        "name": "get_appointments",
+        "method": "GET",
+        "path": "/api/appointments",
+        "entity": "appointment",
+        "table": "appointments",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:appointment"
+        ]
+      },
+      {
+        "name": "post_appointments",
+        "method": "POST",
+        "path": "/api/appointments",
+        "entity": "appointment",
+        "table": "appointments",
+        "body_fields": [
+          "doctor_id",
+          "patient_id",
+          "scheduled_at",
+          "status"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:appointment"
+        ]
+      },
+      {
+        "name": "get_prescriptions",
+        "method": "GET",
+        "path": "/api/prescriptions",
+        "entity": "prescription",
+        "table": "prescriptions",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:prescription"
+        ]
+      },
+      {
+        "name": "post_prescriptions",
+        "method": "POST",
+        "path": "/api/prescriptions",
+        "entity": "prescription",
+        "table": "prescriptions",
+        "body_fields": [
+          "appointment_id",
+          "notes"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:prescription"
+        ]
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "doctors",
+        "entity": "doctor",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "specialty",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "patients",
+        "entity": "patient",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "phone",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "appointments",
+        "entity": "appointment",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "doctor_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "patient_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "scheduled_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "prescriptions",
+        "entity": "prescription",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "appointment_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "notes",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "appointments",
+        "to_table": "doctors",
+        "type": "one_to_many",
+        "field": "doctor_id"
+      },
+      {
+        "from_table": "appointments",
+        "to_table": "patients",
+        "type": "one_to_many",
+        "field": "patient_id"
+      },
+      {
+        "from_table": "prescriptions",
+        "to_table": "appointments",
+        "type": "one_to_many",
+        "field": "appointment_id"
+      }
+    ]
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "doctor",
+        "description": "Doctor role"
+      },
+      {
+        "name": "receptionist",
+        "description": "Receptionist role"
+      },
+      {
+        "name": "user",
+        "description": "User role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "delete:appointment",
+        "description": "Allows delete:appointment",
+        "roles": []
+      },
+      {
+        "name": "delete:doctor",
+        "description": "Allows delete:doctor",
+        "roles": []
+      },
+      {
+        "name": "delete:patient",
+        "description": "Allows delete:patient",
+        "roles": []
+      },
+      {
+        "name": "delete:prescription",
+        "description": "Allows delete:prescription",
+        "roles": []
+      },
+      {
+        "name": "manage:appointment",
+        "description": "Allows manage:appointment",
+        "roles": []
+      },
+      {
+        "name": "manage:doctor",
+        "description": "Allows manage:doctor",
+        "roles": []
+      },
+      {
+        "name": "manage:patient",
+        "description": "Allows manage:patient",
+        "roles": []
+      },
+      {
+        "name": "manage:prescription",
+        "description": "Allows manage:prescription",
+        "roles": []
+      },
+      {
+        "name": "manage:users",
+        "description": "Allows manage:users",
+        "roles": []
+      },
+      {
+        "name": "read:appointment",
+        "description": "Allows read:appointment",
+        "roles": [
+          "doctor",
+          "receptionist",
+          "user"
+        ]
+      },
+      {
+        "name": "read:doctor",
+        "description": "Allows read:doctor",
+        "roles": [
+          "doctor",
+          "receptionist",
+          "user"
+        ]
+      },
+      {
+        "name": "read:patient",
+        "description": "Allows read:patient",
+        "roles": [
+          "doctor",
+          "receptionist",
+          "user"
+        ]
+      },
+      {
+        "name": "read:prescription",
+        "description": "Allows read:prescription",
+        "roles": [
+          "doctor",
+          "receptionist",
+          "user"
+        ]
+      },
+      {
+        "name": "write:appointment",
+        "description": "Allows write:appointment",
+        "roles": [
+          "doctor",
+          "receptionist",
+          "user"
+        ]
+      },
+      {
+        "name": "write:doctor",
+        "description": "Allows write:doctor",
+        "roles": [
+          "doctor",
+          "receptionist",
+          "user"
+        ]
+      },
+      {
+        "name": "write:patient",
+        "description": "Allows write:patient",
+        "roles": [
+          "doctor",
+          "receptionist",
+          "user"
+        ]
+      },
+      {
+        "name": "write:prescription",
+        "description": "Allows write:prescription",
+        "roles": [
+          "doctor",
+          "receptionist",
+          "user"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "role-access",
+      "description": "Protected pages and APIs require declared roles and permissions.",
+      "expression": "all(required_permissions in user.permissions)",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "ownership-restriction",
+      "description": "Users may update only records they own unless they have manage permission.",
+      "expression": "record.owner_id == user.id or user.has_manage_permission",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": false,
+    "repair_count": 0
+  },
+  "repair_history": [],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "rendered page Login with auth layout",
+      "rendered component Login Form",
+      "registered route /dashboard",
+      "rendered page Dashboard with dashboard layout",
+      "rendered component Navigation",
+      "rendered component Summary Metrics",
+      "registered route /doctors",
+      "rendered page Doctors with crud layout",
+      "rendered component Doctor Table",
+      "rendered component Doctor Form",
+      "registered route /patients",
+      "rendered page Patients with crud layout",
+      "rendered component Patient Table",
+      "rendered component Patient Form",
+      "registered route /appointments",
+      "rendered page Appointments with crud layout",
+      "rendered component Appointment Table",
+      "rendered component Appointment Form",
+      "registered route /prescriptions",
+      "rendered page Prescriptions with crud layout",
+      "rendered component Prescription Table",
+      "rendered component Prescription Form",
+      "created table doctors(created_at, email, id, name, specialty)",
+      "created table patients(created_at, email, id, name, phone)",
+      "created table appointments(created_at, doctor_id, id, patient_id, scheduled_at, status)",
+      "created table prescriptions(appointment_id, created_at, id, notes)",
+      "created table users(email, id, password_hash, role)",
+      "created relationship appointments.doctor_id -> doctors",
+      "created relationship appointments.patient_id -> patients",
+      "created relationship prescriptions.appointment_id -> appointments",
+      "registered endpoint POST /api/auth/login",
+      "bound POST /api/auth/login to users",
+      "registered endpoint GET /api/doctors",
+      "bound GET /api/doctors to doctors",
+      "registered endpoint POST /api/doctors",
+      "bound POST /api/doctors to doctors",
+      "registered endpoint GET /api/patients",
+      "bound GET /api/patients to patients",
+      "registered endpoint POST /api/patients",
+      "bound POST /api/patients to patients",
+      "registered endpoint GET /api/appointments",
+      "bound GET /api/appointments to appointments",
+      "registered endpoint POST /api/appointments",
+      "bound POST /api/appointments to appointments",
+      "registered endpoint GET /api/prescriptions",
+      "bound GET /api/prescriptions to prescriptions",
+      "registered endpoint POST /api/prescriptions",
+      "bound POST /api/prescriptions to prescriptions",
+      "loaded auth role doctor",
+      "loaded auth role receptionist",
+      "loaded auth role user",
+      "loaded permission delete:appointment",
+      "loaded permission delete:doctor",
+      "loaded permission delete:patient",
+      "loaded permission delete:prescription",
+      "loaded permission manage:appointment",
+      "loaded permission manage:doctor",
+      "loaded permission manage:patient",
+      "loaded permission manage:prescription",
+      "loaded permission manage:users",
+      "loaded permission read:appointment",
+      "loaded permission read:doctor",
+      "loaded permission read:patient",
+      "loaded permission read:prescription",
+      "loaded permission write:appointment",
+      "loaded permission write:doctor",
+      "loaded permission write:patient",
+      "loaded permission write:prescription",
+      "verified form login_form submits to /api/auth/login",
+      "checked permission read:doctor for /dashboard",
+      "checked permission read:doctor for /doctors",
+      "checked permission write:doctor for /doctors",
+      "verified form doctor_form submits to /api/doctors",
+      "checked permission read:patient for /patients",
+      "checked permission write:patient for /patients",
+      "verified form patient_form submits to /api/patients",
+      "checked permission read:appointment for /appointments",
+      "checked permission write:appointment for /appointments",
+      "verified form appointment_form submits to /api/appointments",
+      "checked permission read:prescription for /prescriptions",
+      "checked permission write:prescription for /prescriptions",
+      "verified form prescription_form submits to /api/prescriptions",
+      "compiled business rule role-access",
+      "compiled business rule ownership-restriction"
+    ],
+    "errors": []
+  },
+  "quality_metrics": {
+    "consistency_score": 95,
+    "execution_readiness_score": 96,
+    "schema_completeness_score": 94,
+    "repairability_score": 92
+  }
+}

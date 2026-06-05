@@ -1,0 +1,342 @@
+{
+  "app": {
+    "name": "Analytics Event Manager",
+    "slug": "analytics-event-manager",
+    "version": "1.0.0",
+    "description": "Make an analytics platform for everyone, but analytics must be admin-only."
+  },
+  "assumptions": [
+    "Intent extraction used deterministic local rules in 0.07 ms."
+  ],
+  "entities": [
+    {
+      "name": "analytics_event",
+      "table": "analytics_events",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "event_name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "actor_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Analytics Event Table",
+            "type": "table",
+            "entity": "analytics_event"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Admin Analytics",
+        "route": "/admin/analytics",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Analytics Event Table",
+            "type": "table",
+            "entity": "analytics_event"
+          },
+          {
+            "name": "Revenue Metric",
+            "type": "metric",
+            "entity": "analytics_event"
+          },
+          {
+            "name": "Funnel Chart",
+            "type": "chart",
+            "entity": "analytics_event"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "admin"
+        ],
+        "required_permissions": [
+          "read:admin_analytics"
+        ],
+        "premium_required": true
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "list_analytics_events",
+        "method": "GET",
+        "path": "/api/analytics-events",
+        "entity": "analytics_event",
+        "table": "analytics_events",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "analytics_analytics_events",
+        "method": "GET",
+        "path": "/api/admin/analytics",
+        "entity": "analytics_event",
+        "table": "analytics_events",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "admin"
+        ],
+        "required_permissions": [
+          "read:admin_analytics"
+        ]
+      },
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "analytics_events",
+        "entity": "analytics_event",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "event_name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "actor_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": []
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "user",
+        "description": "User role"
+      },
+      {
+        "name": "admin",
+        "description": "Admin role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "read:dashboard",
+        "description": "Allows read:dashboard",
+        "roles": [
+          "user",
+          "admin"
+        ]
+      },
+      {
+        "name": "write:records",
+        "description": "Allows write:records",
+        "roles": [
+          "user",
+          "admin"
+        ]
+      },
+      {
+        "name": "read:admin_analytics",
+        "description": "Allows read:admin_analytics",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "use:premium",
+        "description": "Allows use:premium",
+        "roles": [
+          "user",
+          "admin"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "premium-only-workflows-require-an-active-subscri",
+      "description": "Premium-only workflows require an active subscription before execution.",
+      "expression": "user.subscription.status == 'active'",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "admin-analytics-requires-read-admin-analytics-pe",
+      "description": "Admin analytics requires read:admin_analytics permission.",
+      "expression": "'read:admin_analytics' in user.permissions",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": true,
+    "repair_count": 1
+  },
+  "repair_history": [
+    {
+      "iteration": 1,
+      "issue_codes": [
+        "DB_PRIMARY_KEY_MISSING"
+      ],
+      "strategy": "localized_patch",
+      "patched_sections": [
+        "database"
+      ],
+      "before_error_count": 1,
+      "after_error_count": 0
+    }
+  ],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "registered route /dashboard",
+      "registered route /admin/analytics",
+      "created table analytics_events(actor_id, created_at, event_name, id)",
+      "created table users(email, id, password_hash)",
+      "bound GET /api/analytics-events to analytics_events",
+      "bound GET /api/admin/analytics to analytics_events",
+      "bound POST /api/auth/login to users",
+      "verified form login_form submits to /api/auth/login",
+      "compiled business rule premium-only-workflows-require-an-active-subscri",
+      "compiled business rule admin-analytics-requires-read-admin-analytics-pe"
+    ],
+    "errors": []
+  }
+}

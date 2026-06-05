@@ -1,0 +1,1412 @@
+{
+  "pipeline": {
+    "id": "4d05b5e3-2862-5406-bc4a-6d58b597ad71",
+    "input_prompt": "Build an e-commerce app with payments but no users or login.",
+    "stage_status": [
+      {
+        "stage": "intent_extraction",
+        "status": "passed",
+        "latency_ms": 0.17,
+        "summary": "Extracted structured intent."
+      },
+      {
+        "stage": "system_design",
+        "status": "passed",
+        "latency_ms": 0.2,
+        "summary": "Designed config-driven architecture."
+      },
+      {
+        "stage": "schema_generation",
+        "status": "passed",
+        "latency_ms": 1.42,
+        "summary": "Generated strict app_config schema."
+      },
+      {
+        "stage": "refinement",
+        "status": "passed",
+        "latency_ms": 2.67,
+        "summary": "Normalized permissions, deduped surfaces, and completed business rules."
+      },
+      {
+        "stage": "validation",
+        "status": "failed",
+        "latency_ms": 0.25,
+        "summary": "1 errors, 0 warnings."
+      },
+      {
+        "stage": "repair",
+        "status": "passed",
+        "latency_ms": 3.02,
+        "summary": "Applied 1 localized repair pass(es)."
+      },
+      {
+        "stage": "execution_simulation",
+        "status": "passed",
+        "latency_ms": 0.14,
+        "summary": "Simulated routes, UI, API, DB, auth, permissions, and business rules."
+      }
+    ],
+    "total_latency_ms": 8.12,
+    "deterministic_mode": true,
+    "injected_fault": "break_form_endpoint"
+  },
+  "app": {
+    "name": "Ecommerce Builder",
+    "slug": "ecommerce-builder",
+    "version": "1.0.0",
+    "description": "Build an e-commerce app with payments but no users or login."
+  },
+  "assumptions": [],
+  "intent": {
+    "app_type": "ecommerce",
+    "domain": "ecommerce",
+    "primary_goal": "Build an e-commerce app with payments but no users or login.",
+    "features": [
+      "storefront",
+      "cart",
+      "checkout",
+      "payments"
+    ],
+    "requested_entities": [
+      "product",
+      "cart",
+      "order",
+      "payment",
+      "subscription"
+    ],
+    "requested_roles": [
+      "user"
+    ],
+    "auth_required": true,
+    "payments_required": true,
+    "analytics_required": false,
+    "premium_required": false,
+    "crud_required": true,
+    "ambiguities": [],
+    "conflicts": [],
+    "missing_details": [],
+    "assumptions": []
+  },
+  "design": {
+    "architecture": "config-driven full-stack application",
+    "modules": [
+      "ui",
+      "api",
+      "database",
+      "auth",
+      "validation",
+      "runtime_simulation",
+      "billing"
+    ],
+    "entities": [
+      {
+        "name": "product",
+        "description": "Product records used by the ecommerce app.",
+        "fields": [
+          "id",
+          "name",
+          "sku",
+          "price",
+          "stock",
+          "created_at"
+        ]
+      },
+      {
+        "name": "cart",
+        "description": "Cart records used by the ecommerce app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "order",
+        "description": "Order records used by the ecommerce app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "payment",
+        "description": "Payment records used by the ecommerce app.",
+        "fields": [
+          "id",
+          "subscription_id",
+          "amount",
+          "status",
+          "created_at"
+        ]
+      },
+      {
+        "name": "subscription",
+        "description": "Subscription records used by the ecommerce app.",
+        "fields": [
+          "id",
+          "user_id",
+          "plan",
+          "status",
+          "renewal_at"
+        ]
+      }
+    ],
+    "roles": [
+      "user"
+    ],
+    "user_flows": [
+      "login",
+      "dashboard",
+      "manage products",
+      "manage carts",
+      "manage orders",
+      "manage payments",
+      "manage subscriptions",
+      "billing and payment management"
+    ],
+    "access_model": {
+      "default_read_roles": [
+        "user"
+      ],
+      "write_roles": [
+        "user"
+      ],
+      "admin_only": [
+        "analytics",
+        "user_management"
+      ],
+      "premium_requires": null
+    },
+    "data_model_summary": "5 domain entities compiled into relational tables with inferred relationships.",
+    "business_rules_summary": "Role access, ownership checks, CRUD permissions, and audit-safe persistence.",
+    "risk_notes": [],
+    "app_name": "Ecommerce Builder",
+    "summary": "Build an e-commerce app with payments but no users or login.",
+    "premium_required": false,
+    "analytics_required": false,
+    "payments_required": true
+  },
+  "entities": [
+    {
+      "name": "product",
+      "table": "products",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "sku",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "price",
+          "type": "currency",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "stock",
+          "type": "integer",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "cart",
+      "table": "carts",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "order",
+      "table": "orders",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "payment",
+      "table": "payments",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "subscription_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "amount",
+          "type": "currency",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "subscription",
+      "table": "subscriptions",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "user_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "plan",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "renewal_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "layout": "auth",
+        "components": [
+          {
+            "name": "Login Form",
+            "type": "form",
+            "entity": "user"
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "layout": "dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Summary Metrics",
+            "type": "metric",
+            "entity": "product"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:product"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Products",
+        "route": "/products",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Product Table",
+            "type": "table",
+            "entity": "product"
+          },
+          {
+            "name": "Product Form",
+            "type": "form",
+            "entity": "product"
+          }
+        ],
+        "forms": [
+          {
+            "name": "product_form",
+            "entity": "product",
+            "fields": [
+              "name",
+              "sku",
+              "price",
+              "stock"
+            ],
+            "submit_endpoint": "/api/products"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:product",
+          "write:product"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Carts",
+        "route": "/carts",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Cart Table",
+            "type": "table",
+            "entity": "cart"
+          },
+          {
+            "name": "Cart Form",
+            "type": "form",
+            "entity": "cart"
+          }
+        ],
+        "forms": [
+          {
+            "name": "cart_form",
+            "entity": "cart",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/carts"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:cart",
+          "write:cart"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Orders",
+        "route": "/orders",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Order Table",
+            "type": "table",
+            "entity": "order"
+          },
+          {
+            "name": "Order Form",
+            "type": "form",
+            "entity": "order"
+          }
+        ],
+        "forms": [
+          {
+            "name": "order_form",
+            "entity": "order",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/orders"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:order",
+          "write:order"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Payments",
+        "route": "/payments",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Payment Table",
+            "type": "table",
+            "entity": "payment"
+          },
+          {
+            "name": "Payment Form",
+            "type": "form",
+            "entity": "payment"
+          }
+        ],
+        "forms": [
+          {
+            "name": "payment_form",
+            "entity": "payment",
+            "fields": [
+              "subscription_id",
+              "amount",
+              "status"
+            ],
+            "submit_endpoint": "/api/payments"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:payment",
+          "manage:billing",
+          "write:payment"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Subscriptions",
+        "route": "/subscriptions",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Subscription Table",
+            "type": "table",
+            "entity": "subscription"
+          },
+          {
+            "name": "Subscription Form",
+            "type": "form",
+            "entity": "subscription"
+          }
+        ],
+        "forms": [
+          {
+            "name": "subscription_form",
+            "entity": "subscription",
+            "fields": [
+              "user_id",
+              "plan",
+              "status",
+              "renewal_at"
+            ],
+            "submit_endpoint": "/api/subscriptions"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:subscription",
+          "manage:billing",
+          "write:subscription"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "validations": [
+          "password_hash_transform"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      },
+      {
+        "name": "get_products",
+        "method": "GET",
+        "path": "/api/products",
+        "entity": "product",
+        "table": "products",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:product"
+        ]
+      },
+      {
+        "name": "post_products",
+        "method": "POST",
+        "path": "/api/products",
+        "entity": "product",
+        "table": "products",
+        "body_fields": [
+          "name",
+          "sku",
+          "price",
+          "stock"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:product"
+        ]
+      },
+      {
+        "name": "get_carts",
+        "method": "GET",
+        "path": "/api/carts",
+        "entity": "cart",
+        "table": "carts",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:cart"
+        ]
+      },
+      {
+        "name": "post_carts",
+        "method": "POST",
+        "path": "/api/carts",
+        "entity": "cart",
+        "table": "carts",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:cart"
+        ]
+      },
+      {
+        "name": "get_orders",
+        "method": "GET",
+        "path": "/api/orders",
+        "entity": "order",
+        "table": "orders",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:order"
+        ]
+      },
+      {
+        "name": "post_orders",
+        "method": "POST",
+        "path": "/api/orders",
+        "entity": "order",
+        "table": "orders",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:order"
+        ]
+      },
+      {
+        "name": "get_payments",
+        "method": "GET",
+        "path": "/api/payments",
+        "entity": "payment",
+        "table": "payments",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:payment"
+        ]
+      },
+      {
+        "name": "post_payments",
+        "method": "POST",
+        "path": "/api/payments",
+        "entity": "payment",
+        "table": "payments",
+        "body_fields": [
+          "subscription_id",
+          "amount",
+          "status"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:payment"
+        ]
+      },
+      {
+        "name": "get_subscriptions",
+        "method": "GET",
+        "path": "/api/subscriptions",
+        "entity": "subscription",
+        "table": "subscriptions",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:subscription"
+        ]
+      },
+      {
+        "name": "post_subscriptions",
+        "method": "POST",
+        "path": "/api/subscriptions",
+        "entity": "subscription",
+        "table": "subscriptions",
+        "body_fields": [
+          "user_id",
+          "plan",
+          "status",
+          "renewal_at"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:subscription"
+        ]
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "products",
+        "entity": "product",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "sku",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "price",
+            "type": "currency",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "stock",
+            "type": "integer",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "carts",
+        "entity": "cart",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "orders",
+        "entity": "order",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "payments",
+        "entity": "payment",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "subscription_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "amount",
+            "type": "currency",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "subscriptions",
+        "entity": "subscription",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "user_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "plan",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "renewal_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "payments",
+        "to_table": "subscriptions",
+        "type": "one_to_many",
+        "field": "subscription_id"
+      },
+      {
+        "from_table": "subscriptions",
+        "to_table": "users",
+        "type": "one_to_many",
+        "field": "user_id"
+      }
+    ]
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "user",
+        "description": "User role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "delete:cart",
+        "description": "Allows delete:cart",
+        "roles": []
+      },
+      {
+        "name": "delete:order",
+        "description": "Allows delete:order",
+        "roles": []
+      },
+      {
+        "name": "delete:payment",
+        "description": "Allows delete:payment",
+        "roles": []
+      },
+      {
+        "name": "delete:product",
+        "description": "Allows delete:product",
+        "roles": []
+      },
+      {
+        "name": "delete:subscription",
+        "description": "Allows delete:subscription",
+        "roles": []
+      },
+      {
+        "name": "manage:billing",
+        "description": "Allows manage:billing",
+        "roles": []
+      },
+      {
+        "name": "manage:cart",
+        "description": "Allows manage:cart",
+        "roles": []
+      },
+      {
+        "name": "manage:order",
+        "description": "Allows manage:order",
+        "roles": []
+      },
+      {
+        "name": "manage:payment",
+        "description": "Allows manage:payment",
+        "roles": []
+      },
+      {
+        "name": "manage:product",
+        "description": "Allows manage:product",
+        "roles": []
+      },
+      {
+        "name": "manage:subscription",
+        "description": "Allows manage:subscription",
+        "roles": []
+      },
+      {
+        "name": "manage:users",
+        "description": "Allows manage:users",
+        "roles": []
+      },
+      {
+        "name": "read:cart",
+        "description": "Allows read:cart",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:order",
+        "description": "Allows read:order",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:payment",
+        "description": "Allows read:payment",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:product",
+        "description": "Allows read:product",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:subscription",
+        "description": "Allows read:subscription",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:cart",
+        "description": "Allows write:cart",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:order",
+        "description": "Allows write:order",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:payment",
+        "description": "Allows write:payment",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:product",
+        "description": "Allows write:product",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:subscription",
+        "description": "Allows write:subscription",
+        "roles": [
+          "user"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "role-access",
+      "description": "Protected pages and APIs require declared roles and permissions.",
+      "expression": "all(required_permissions in user.permissions)",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "ownership-restriction",
+      "description": "Users may update only records they own unless they have manage permission.",
+      "expression": "record.owner_id == user.id or user.has_manage_permission",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "payment-access",
+      "description": "Billing operations require manage:billing permission.",
+      "expression": "'manage:billing' in user.permissions",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": true,
+    "repair_count": 1
+  },
+  "repair_history": [
+    {
+      "issue_code": "INVALID_FORM_ENDPOINT",
+      "location": "ui.pages./login.forms.login_form",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 7,
+          "endpoints": 11,
+          "tables": 6
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 7,
+          "endpoints": 11,
+          "tables": 6
+        }
+      },
+      "repair": "Applied localized repair for INVALID_FORM_ENDPOINT.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    }
+  ],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "rendered page Login with auth layout",
+      "rendered component Login Form",
+      "registered route /dashboard",
+      "rendered page Dashboard with dashboard layout",
+      "rendered component Navigation",
+      "rendered component Summary Metrics",
+      "registered route /products",
+      "rendered page Products with crud layout",
+      "rendered component Product Table",
+      "rendered component Product Form",
+      "registered route /carts",
+      "rendered page Carts with crud layout",
+      "rendered component Cart Table",
+      "rendered component Cart Form",
+      "registered route /orders",
+      "rendered page Orders with crud layout",
+      "rendered component Order Table",
+      "rendered component Order Form",
+      "registered route /payments",
+      "rendered page Payments with crud layout",
+      "rendered component Payment Table",
+      "rendered component Payment Form",
+      "registered route /subscriptions",
+      "rendered page Subscriptions with crud layout",
+      "rendered component Subscription Table",
+      "rendered component Subscription Form",
+      "created table products(created_at, id, name, price, sku, stock)",
+      "created table carts(created_at, description, id, name, owner_id)",
+      "created table orders(created_at, description, id, name, owner_id)",
+      "created table payments(amount, created_at, id, status, subscription_id)",
+      "created table subscriptions(id, plan, renewal_at, status, user_id)",
+      "created table users(email, id, password_hash, role)",
+      "created relationship payments.subscription_id -> subscriptions",
+      "created relationship subscriptions.user_id -> users",
+      "registered endpoint POST /api/auth/login",
+      "bound POST /api/auth/login to users",
+      "registered endpoint GET /api/products",
+      "bound GET /api/products to products",
+      "registered endpoint POST /api/products",
+      "bound POST /api/products to products",
+      "registered endpoint GET /api/carts",
+      "bound GET /api/carts to carts",
+      "registered endpoint POST /api/carts",
+      "bound POST /api/carts to carts",
+      "registered endpoint GET /api/orders",
+      "bound GET /api/orders to orders",
+      "registered endpoint POST /api/orders",
+      "bound POST /api/orders to orders",
+      "registered endpoint GET /api/payments",
+      "bound GET /api/payments to payments",
+      "registered endpoint POST /api/payments",
+      "bound POST /api/payments to payments",
+      "registered endpoint GET /api/subscriptions",
+      "bound GET /api/subscriptions to subscriptions",
+      "registered endpoint POST /api/subscriptions",
+      "bound POST /api/subscriptions to subscriptions",
+      "loaded auth role user",
+      "loaded permission delete:cart",
+      "loaded permission delete:order",
+      "loaded permission delete:payment",
+      "loaded permission delete:product",
+      "loaded permission delete:subscription",
+      "loaded permission manage:billing",
+      "loaded permission manage:cart",
+      "loaded permission manage:order",
+      "loaded permission manage:payment",
+      "loaded permission manage:product",
+      "loaded permission manage:subscription",
+      "loaded permission manage:users",
+      "loaded permission read:cart",
+      "loaded permission read:order",
+      "loaded permission read:payment",
+      "loaded permission read:product",
+      "loaded permission read:subscription",
+      "loaded permission write:cart",
+      "loaded permission write:order",
+      "loaded permission write:payment",
+      "loaded permission write:product",
+      "loaded permission write:subscription",
+      "verified form login_form submits to /api/auth/login",
+      "checked permission read:product for /dashboard",
+      "checked permission read:product for /products",
+      "checked permission write:product for /products",
+      "verified form product_form submits to /api/products",
+      "checked permission read:cart for /carts",
+      "checked permission write:cart for /carts",
+      "verified form cart_form submits to /api/carts",
+      "checked permission read:order for /orders",
+      "checked permission write:order for /orders",
+      "verified form order_form submits to /api/orders",
+      "checked permission read:payment for /payments",
+      "checked permission manage:billing for /payments",
+      "checked permission write:payment for /payments",
+      "verified form payment_form submits to /api/payments",
+      "checked permission read:subscription for /subscriptions",
+      "checked permission manage:billing for /subscriptions",
+      "checked permission write:subscription for /subscriptions",
+      "verified form subscription_form submits to /api/subscriptions",
+      "compiled business rule role-access",
+      "compiled business rule ownership-restriction",
+      "compiled business rule payment-access"
+    ],
+    "errors": []
+  },
+  "quality_metrics": {
+    "consistency_score": 95,
+    "execution_readiness_score": 96,
+    "schema_completeness_score": 94,
+    "repairability_score": 92
+  }
+}

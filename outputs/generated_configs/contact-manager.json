@@ -1,0 +1,1646 @@
+{
+  "app": {
+    "name": "Contact Manager",
+    "slug": "contact-manager",
+    "version": "1.0.0",
+    "description": "Build a online ticket booking app\n\n with login, contacts, dashboard, role-based access, and premium plan with payments. Admins can see analytics."
+  },
+  "assumptions": [
+    "Intent extraction used deterministic local rules in 0.08 ms."
+  ],
+  "entities": [
+    {
+      "name": "contact",
+      "table": "contacts",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "company_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "metric",
+      "table": "metrics",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "value",
+          "type": "float",
+          "required": true,
+          "computed": true
+        },
+        {
+          "name": "computed_at",
+          "type": "datetime",
+          "required": true,
+          "computed": true
+        }
+      ]
+    },
+    {
+      "name": "analytics_event",
+      "table": "analytics_events",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "event_name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "actor_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "subscription",
+      "table": "subscriptions",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "user_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "plan",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "renewal_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "payment",
+      "table": "payments",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "subscription_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "amount",
+          "type": "currency",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "booking",
+      "table": "bookings",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "customer",
+      "table": "customers",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "resource",
+      "table": "resources",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "ticket",
+      "table": "tickets",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "agent_note",
+      "table": "agent_notes",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Contact Table",
+            "type": "table",
+            "entity": "contact"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Admin Analytics",
+        "route": "/admin/analytics",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Analytics Event Table",
+            "type": "table",
+            "entity": "analytics_event"
+          },
+          {
+            "name": "Revenue Metric",
+            "type": "metric",
+            "entity": "analytics_event"
+          },
+          {
+            "name": "Funnel Chart",
+            "type": "chart",
+            "entity": "analytics_event"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "admin"
+        ],
+        "required_permissions": [
+          "read:admin_analytics"
+        ],
+        "premium_required": true
+      },
+      {
+        "name": "Contacts",
+        "route": "/contacts",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Contact Table",
+            "type": "table",
+            "entity": "contact"
+          },
+          {
+            "name": "Contact Form",
+            "type": "form",
+            "entity": "contact"
+          }
+        ],
+        "forms": [
+          {
+            "name": "contact_form",
+            "entity": "contact",
+            "fields": [
+              "name",
+              "email",
+              "company_id",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/contacts"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Subscriptions",
+        "route": "/subscriptions",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Subscription Table",
+            "type": "table",
+            "entity": "subscription"
+          },
+          {
+            "name": "Subscription Form",
+            "type": "form",
+            "entity": "subscription"
+          }
+        ],
+        "forms": [
+          {
+            "name": "subscription_form",
+            "entity": "subscription",
+            "fields": [
+              "user_id",
+              "plan",
+              "status",
+              "renewal_at"
+            ],
+            "submit_endpoint": "/api/subscriptions"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Payments",
+        "route": "/payments",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Payment Table",
+            "type": "table",
+            "entity": "payment"
+          },
+          {
+            "name": "Payment Form",
+            "type": "form",
+            "entity": "payment"
+          }
+        ],
+        "forms": [
+          {
+            "name": "payment_form",
+            "entity": "payment",
+            "fields": [
+              "subscription_id",
+              "amount",
+              "status"
+            ],
+            "submit_endpoint": "/api/payments"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Bookings",
+        "route": "/bookings",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Booking Table",
+            "type": "table",
+            "entity": "booking"
+          },
+          {
+            "name": "Booking Form",
+            "type": "form",
+            "entity": "booking"
+          }
+        ],
+        "forms": [
+          {
+            "name": "booking_form",
+            "entity": "booking",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/bookings"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Customers",
+        "route": "/customers",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Customer Table",
+            "type": "table",
+            "entity": "customer"
+          },
+          {
+            "name": "Customer Form",
+            "type": "form",
+            "entity": "customer"
+          }
+        ],
+        "forms": [
+          {
+            "name": "customer_form",
+            "entity": "customer",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/customers"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Resources",
+        "route": "/resources",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Resource Table",
+            "type": "table",
+            "entity": "resource"
+          },
+          {
+            "name": "Resource Form",
+            "type": "form",
+            "entity": "resource"
+          }
+        ],
+        "forms": [
+          {
+            "name": "resource_form",
+            "entity": "resource",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/resources"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Tickets",
+        "route": "/tickets",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Ticket Table",
+            "type": "table",
+            "entity": "ticket"
+          },
+          {
+            "name": "Ticket Form",
+            "type": "form",
+            "entity": "ticket"
+          }
+        ],
+        "forms": [
+          {
+            "name": "ticket_form",
+            "entity": "ticket",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/tickets"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Agent Notes",
+        "route": "/agent-notes",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Agent Note Table",
+            "type": "table",
+            "entity": "agent_note"
+          },
+          {
+            "name": "Agent Note Form",
+            "type": "form",
+            "entity": "agent_note"
+          }
+        ],
+        "forms": [
+          {
+            "name": "agent_note_form",
+            "entity": "agent_note",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/agent-notes"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "list_contacts",
+        "method": "GET",
+        "path": "/api/contacts",
+        "entity": "contact",
+        "table": "contacts",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_contacts",
+        "method": "POST",
+        "path": "/api/contacts",
+        "entity": "contact",
+        "table": "contacts",
+        "body_fields": [
+          "name",
+          "email",
+          "company_id",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_metrics",
+        "method": "GET",
+        "path": "/api/metrics",
+        "entity": "metric",
+        "table": "metrics",
+        "body_fields": [],
+        "computed_fields": [
+          "value",
+          "computed_at"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "list_analytics_events",
+        "method": "GET",
+        "path": "/api/analytics-events",
+        "entity": "analytics_event",
+        "table": "analytics_events",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "list_subscriptions",
+        "method": "GET",
+        "path": "/api/subscriptions",
+        "entity": "subscription",
+        "table": "subscriptions",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_subscriptions",
+        "method": "POST",
+        "path": "/api/subscriptions",
+        "entity": "subscription",
+        "table": "subscriptions",
+        "body_fields": [
+          "user_id",
+          "plan",
+          "status",
+          "renewal_at"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_payments",
+        "method": "GET",
+        "path": "/api/payments",
+        "entity": "payment",
+        "table": "payments",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_payments",
+        "method": "POST",
+        "path": "/api/payments",
+        "entity": "payment",
+        "table": "payments",
+        "body_fields": [
+          "subscription_id",
+          "amount",
+          "status"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_bookings",
+        "method": "GET",
+        "path": "/api/bookings",
+        "entity": "booking",
+        "table": "bookings",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_bookings",
+        "method": "POST",
+        "path": "/api/bookings",
+        "entity": "booking",
+        "table": "bookings",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_customers",
+        "method": "GET",
+        "path": "/api/customers",
+        "entity": "customer",
+        "table": "customers",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_customers",
+        "method": "POST",
+        "path": "/api/customers",
+        "entity": "customer",
+        "table": "customers",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_resources",
+        "method": "GET",
+        "path": "/api/resources",
+        "entity": "resource",
+        "table": "resources",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_resources",
+        "method": "POST",
+        "path": "/api/resources",
+        "entity": "resource",
+        "table": "resources",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_tickets",
+        "method": "GET",
+        "path": "/api/tickets",
+        "entity": "ticket",
+        "table": "tickets",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_tickets",
+        "method": "POST",
+        "path": "/api/tickets",
+        "entity": "ticket",
+        "table": "tickets",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_agent_notes",
+        "method": "GET",
+        "path": "/api/agent-notes",
+        "entity": "agent_note",
+        "table": "agent_notes",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_agent_notes",
+        "method": "POST",
+        "path": "/api/agent-notes",
+        "entity": "agent_note",
+        "table": "agent_notes",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "analytics_analytics_events",
+        "method": "GET",
+        "path": "/api/admin/analytics",
+        "entity": "analytics_event",
+        "table": "analytics_events",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "admin"
+        ],
+        "required_permissions": [
+          "read:admin_analytics"
+        ]
+      },
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "contacts",
+        "entity": "contact",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "company_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "metrics",
+        "entity": "metric",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "value",
+            "type": "float",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "computed_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "analytics_events",
+        "entity": "analytics_event",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "event_name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "actor_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "subscriptions",
+        "entity": "subscription",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "user_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "plan",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "renewal_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "payments",
+        "entity": "payment",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "subscription_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "amount",
+            "type": "currency",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "bookings",
+        "entity": "booking",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "customers",
+        "entity": "customer",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "resources",
+        "entity": "resource",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "tickets",
+        "entity": "ticket",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "agent_notes",
+        "entity": "agent_note",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "subscriptions",
+        "to_table": "users",
+        "type": "one_to_many",
+        "field": "user_id"
+      },
+      {
+        "from_table": "payments",
+        "to_table": "subscriptions",
+        "type": "one_to_many",
+        "field": "subscription_id"
+      }
+    ]
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "user",
+        "description": "User role"
+      },
+      {
+        "name": "admin",
+        "description": "Admin role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "read:dashboard",
+        "description": "Allows read:dashboard",
+        "roles": [
+          "user",
+          "admin"
+        ]
+      },
+      {
+        "name": "write:records",
+        "description": "Allows write:records",
+        "roles": [
+          "user",
+          "admin"
+        ]
+      },
+      {
+        "name": "read:admin_analytics",
+        "description": "Allows read:admin_analytics",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "use:premium",
+        "description": "Allows use:premium",
+        "roles": [
+          "user",
+          "admin"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "premium-only-workflows-require-an-active-subscri",
+      "description": "Premium-only workflows require an active subscription before execution.",
+      "expression": "user.subscription.status == 'active'",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "admin-analytics-requires-read-admin-analytics-pe",
+      "description": "Admin analytics requires read:admin_analytics permission.",
+      "expression": "'read:admin_analytics' in user.permissions",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": false,
+    "repair_count": 0
+  },
+  "repair_history": [],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "registered route /dashboard",
+      "registered route /admin/analytics",
+      "registered route /contacts",
+      "registered route /subscriptions",
+      "registered route /payments",
+      "registered route /bookings",
+      "registered route /customers",
+      "registered route /resources",
+      "registered route /tickets",
+      "registered route /agent-notes",
+      "created table contacts(company_id, created_at, email, id, name, owner_id)",
+      "created table metrics(computed_at, id, name, value)",
+      "created table analytics_events(actor_id, created_at, event_name, id)",
+      "created table subscriptions(id, plan, renewal_at, status, user_id)",
+      "created table payments(amount, created_at, id, status, subscription_id)",
+      "created table bookings(created_at, description, id, name, owner_id)",
+      "created table customers(created_at, description, id, name, owner_id)",
+      "created table resources(created_at, description, id, name, owner_id)",
+      "created table tickets(created_at, description, id, name, owner_id)",
+      "created table agent_notes(created_at, description, id, name, owner_id)",
+      "created table users(email, id, password_hash)",
+      "bound GET /api/contacts to contacts",
+      "bound POST /api/contacts to contacts",
+      "bound GET /api/metrics to metrics",
+      "bound GET /api/analytics-events to analytics_events",
+      "bound GET /api/subscriptions to subscriptions",
+      "bound POST /api/subscriptions to subscriptions",
+      "bound GET /api/payments to payments",
+      "bound POST /api/payments to payments",
+      "bound GET /api/bookings to bookings",
+      "bound POST /api/bookings to bookings",
+      "bound GET /api/customers to customers",
+      "bound POST /api/customers to customers",
+      "bound GET /api/resources to resources",
+      "bound POST /api/resources to resources",
+      "bound GET /api/tickets to tickets",
+      "bound POST /api/tickets to tickets",
+      "bound GET /api/agent-notes to agent_notes",
+      "bound POST /api/agent-notes to agent_notes",
+      "bound GET /api/admin/analytics to analytics_events",
+      "bound POST /api/auth/login to users",
+      "verified form login_form submits to /api/auth/login",
+      "verified form contact_form submits to /api/contacts",
+      "verified form subscription_form submits to /api/subscriptions",
+      "verified form payment_form submits to /api/payments",
+      "verified form booking_form submits to /api/bookings",
+      "verified form customer_form submits to /api/customers",
+      "verified form resource_form submits to /api/resources",
+      "verified form ticket_form submits to /api/tickets",
+      "verified form agent_note_form submits to /api/agent-notes",
+      "compiled business rule premium-only-workflows-require-an-active-subscri",
+      "compiled business rule admin-analytics-requires-read-admin-analytics-pe"
+    ],
+    "errors": []
+  }
+}

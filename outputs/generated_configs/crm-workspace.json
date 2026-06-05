@@ -1,0 +1,1223 @@
+{
+  "pipeline": {
+    "id": "62d6a801-89b0-5b7f-a57c-9d626018b5c7",
+    "input_prompt": "Build a CRM where only admins can edit contacts but all users can edit contacts.",
+    "stage_status": [
+      {
+        "stage": "intent_extraction",
+        "status": "passed",
+        "latency_ms": 0.11,
+        "summary": "Extracted structured intent."
+      },
+      {
+        "stage": "system_design",
+        "status": "passed",
+        "latency_ms": 0.1,
+        "summary": "Designed config-driven architecture."
+      },
+      {
+        "stage": "schema_generation",
+        "status": "passed",
+        "latency_ms": 1.24,
+        "summary": "Generated strict app_config schema."
+      },
+      {
+        "stage": "refinement",
+        "status": "passed",
+        "latency_ms": 2.16,
+        "summary": "Normalized permissions, deduped surfaces, and completed business rules."
+      },
+      {
+        "stage": "validation",
+        "status": "failed",
+        "latency_ms": 0.2,
+        "summary": "1 errors, 0 warnings."
+      },
+      {
+        "stage": "repair",
+        "status": "passed",
+        "latency_ms": 3.05,
+        "summary": "Applied 1 localized repair pass(es)."
+      },
+      {
+        "stage": "execution_simulation",
+        "status": "passed",
+        "latency_ms": 0.14,
+        "summary": "Simulated routes, UI, API, DB, auth, permissions, and business rules."
+      }
+    ],
+    "total_latency_ms": 7.14,
+    "deterministic_mode": true,
+    "injected_fault": "remove_endpoint"
+  },
+  "app": {
+    "name": "CRM Workspace",
+    "slug": "crm-workspace",
+    "version": "1.0.0",
+    "description": "Build a CRM where only admins can edit contacts but all users can edit contacts."
+  },
+  "assumptions": [
+    "Edit access is conflicting: admin-only edit and all-user edit were both requested."
+  ],
+  "intent": {
+    "app_type": "crm",
+    "domain": "crm",
+    "primary_goal": "Build a CRM where only admins can edit contacts but all users can edit contacts.",
+    "features": [
+      "dashboard",
+      "contacts",
+      "deals"
+    ],
+    "requested_entities": [
+      "contact",
+      "company",
+      "deal",
+      "activity"
+    ],
+    "requested_roles": [
+      "user",
+      "admin"
+    ],
+    "auth_required": true,
+    "payments_required": false,
+    "analytics_required": false,
+    "premium_required": false,
+    "crud_required": true,
+    "ambiguities": [],
+    "conflicts": [
+      "Edit access is conflicting: admin-only edit and all-user edit were both requested."
+    ],
+    "missing_details": [],
+    "assumptions": [
+      "Chose safer rule: destructive and edit operations require admin or manager permissions."
+    ]
+  },
+  "design": {
+    "architecture": "config-driven full-stack application",
+    "modules": [
+      "ui",
+      "api",
+      "database",
+      "auth",
+      "validation",
+      "runtime_simulation"
+    ],
+    "entities": [
+      {
+        "name": "contact",
+        "description": "Contact records used by the crm app.",
+        "fields": [
+          "id",
+          "name",
+          "email",
+          "company_id",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "company",
+        "description": "Company records used by the crm app.",
+        "fields": [
+          "id",
+          "name",
+          "domain",
+          "created_at"
+        ]
+      },
+      {
+        "name": "deal",
+        "description": "Deal records used by the crm app.",
+        "fields": [
+          "id",
+          "title",
+          "amount",
+          "stage",
+          "contact_id",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "activity",
+        "description": "Activity records used by the crm app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      }
+    ],
+    "roles": [
+      "user",
+      "admin"
+    ],
+    "user_flows": [
+      "login",
+      "dashboard",
+      "manage contacts",
+      "manage companies",
+      "manage deals",
+      "manage activities"
+    ],
+    "access_model": {
+      "default_read_roles": [
+        "user",
+        "admin"
+      ],
+      "write_roles": [
+        "admin",
+        "manager"
+      ],
+      "admin_only": [
+        "analytics",
+        "user_management"
+      ],
+      "premium_requires": null
+    },
+    "data_model_summary": "4 domain entities compiled into relational tables with inferred relationships.",
+    "business_rules_summary": "Role access, ownership checks, CRUD permissions, and audit-safe persistence.",
+    "risk_notes": [
+      "Edit access is conflicting: admin-only edit and all-user edit were both requested."
+    ],
+    "app_name": "CRM Workspace",
+    "summary": "Build a CRM where only admins can edit contacts but all users can edit contacts.",
+    "premium_required": false,
+    "analytics_required": false,
+    "payments_required": false
+  },
+  "entities": [
+    {
+      "name": "contact",
+      "table": "contacts",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "company_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "company",
+      "table": "companies",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "domain",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "deal",
+      "table": "deals",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "amount",
+          "type": "currency",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "stage",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "contact_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "activity",
+      "table": "activities",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "layout": "auth",
+        "components": [
+          {
+            "name": "Login Form",
+            "type": "form",
+            "entity": "user"
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "layout": "dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Summary Metrics",
+            "type": "metric",
+            "entity": "contact"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:contact"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Contacts",
+        "route": "/contacts",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Contact Table",
+            "type": "table",
+            "entity": "contact"
+          },
+          {
+            "name": "Contact Form",
+            "type": "form",
+            "entity": "contact"
+          }
+        ],
+        "forms": [
+          {
+            "name": "contact_form",
+            "entity": "contact",
+            "fields": [
+              "name",
+              "email",
+              "company_id",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/contacts"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:contact",
+          "write:contact"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Companies",
+        "route": "/companies",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Company Table",
+            "type": "table",
+            "entity": "company"
+          },
+          {
+            "name": "Company Form",
+            "type": "form",
+            "entity": "company"
+          }
+        ],
+        "forms": [
+          {
+            "name": "company_form",
+            "entity": "company",
+            "fields": [
+              "name",
+              "domain"
+            ],
+            "submit_endpoint": "/api/companies"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:company",
+          "write:company"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Deals",
+        "route": "/deals",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Deal Table",
+            "type": "table",
+            "entity": "deal"
+          },
+          {
+            "name": "Deal Form",
+            "type": "form",
+            "entity": "deal"
+          }
+        ],
+        "forms": [
+          {
+            "name": "deal_form",
+            "entity": "deal",
+            "fields": [
+              "title",
+              "amount",
+              "stage",
+              "contact_id",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/deals"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:deal",
+          "write:deal"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Activities",
+        "route": "/activities",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Activity Table",
+            "type": "table",
+            "entity": "activity"
+          },
+          {
+            "name": "Activity Form",
+            "type": "form",
+            "entity": "activity"
+          }
+        ],
+        "forms": [
+          {
+            "name": "activity_form",
+            "entity": "activity",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/activities"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:activity",
+          "write:activity"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "validations": [
+          "password_hash_transform"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      },
+      {
+        "name": "get_companies",
+        "method": "GET",
+        "path": "/api/companies",
+        "entity": "company",
+        "table": "companies",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:company"
+        ]
+      },
+      {
+        "name": "post_companies",
+        "method": "POST",
+        "path": "/api/companies",
+        "entity": "company",
+        "table": "companies",
+        "body_fields": [
+          "name",
+          "domain"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:company"
+        ]
+      },
+      {
+        "name": "get_deals",
+        "method": "GET",
+        "path": "/api/deals",
+        "entity": "deal",
+        "table": "deals",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:deal"
+        ]
+      },
+      {
+        "name": "post_deals",
+        "method": "POST",
+        "path": "/api/deals",
+        "entity": "deal",
+        "table": "deals",
+        "body_fields": [
+          "title",
+          "amount",
+          "stage",
+          "contact_id",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:deal"
+        ]
+      },
+      {
+        "name": "get_activities",
+        "method": "GET",
+        "path": "/api/activities",
+        "entity": "activity",
+        "table": "activities",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:activity"
+        ]
+      },
+      {
+        "name": "post_activities",
+        "method": "POST",
+        "path": "/api/activities",
+        "entity": "activity",
+        "table": "activities",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:activity"
+        ]
+      },
+      {
+        "name": "auto_contact_form",
+        "method": "POST",
+        "path": "/api/contacts",
+        "entity": "contact",
+        "table": "contacts",
+        "body_fields": [
+          "name",
+          "email",
+          "company_id",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:contact",
+          "write:contact"
+        ]
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "contacts",
+        "entity": "contact",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "company_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "companies",
+        "entity": "company",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "domain",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "deals",
+        "entity": "deal",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "amount",
+            "type": "currency",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "stage",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "contact_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "activities",
+        "entity": "activity",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "contacts",
+        "to_table": "companies",
+        "type": "one_to_many",
+        "field": "company_id"
+      },
+      {
+        "from_table": "deals",
+        "to_table": "contacts",
+        "type": "one_to_many",
+        "field": "contact_id"
+      }
+    ]
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "admin",
+        "description": "Admin role"
+      },
+      {
+        "name": "user",
+        "description": "User role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "delete:activity",
+        "description": "Allows delete:activity",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:company",
+        "description": "Allows delete:company",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:contact",
+        "description": "Allows delete:contact",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:deal",
+        "description": "Allows delete:deal",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:activity",
+        "description": "Allows manage:activity",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:company",
+        "description": "Allows manage:company",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:contact",
+        "description": "Allows manage:contact",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:deal",
+        "description": "Allows manage:deal",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:users",
+        "description": "Allows manage:users",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "read:activity",
+        "description": "Allows read:activity",
+        "roles": [
+          "admin",
+          "user"
+        ]
+      },
+      {
+        "name": "read:company",
+        "description": "Allows read:company",
+        "roles": [
+          "admin",
+          "user"
+        ]
+      },
+      {
+        "name": "read:contact",
+        "description": "Allows read:contact",
+        "roles": [
+          "admin",
+          "user"
+        ]
+      },
+      {
+        "name": "read:deal",
+        "description": "Allows read:deal",
+        "roles": [
+          "admin",
+          "user"
+        ]
+      },
+      {
+        "name": "write:activity",
+        "description": "Allows write:activity",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "write:company",
+        "description": "Allows write:company",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "write:contact",
+        "description": "Allows write:contact",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "write:deal",
+        "description": "Allows write:deal",
+        "roles": [
+          "admin"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "role-access",
+      "description": "Protected pages and APIs require declared roles and permissions.",
+      "expression": "all(required_permissions in user.permissions)",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "ownership-restriction",
+      "description": "Users may update only records they own unless they have manage permission.",
+      "expression": "record.owner_id == user.id or user.has_manage_permission",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": true,
+    "repair_count": 1
+  },
+  "repair_history": [
+    {
+      "issue_code": "MISSING_API_ENDPOINT",
+      "location": "ui.pages./contacts.forms.contact_form",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 7,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 8,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_API_ENDPOINT.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    }
+  ],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "rendered page Login with auth layout",
+      "rendered component Login Form",
+      "registered route /dashboard",
+      "rendered page Dashboard with dashboard layout",
+      "rendered component Navigation",
+      "rendered component Summary Metrics",
+      "registered route /contacts",
+      "rendered page Contacts with crud layout",
+      "rendered component Contact Table",
+      "rendered component Contact Form",
+      "registered route /companies",
+      "rendered page Companies with crud layout",
+      "rendered component Company Table",
+      "rendered component Company Form",
+      "registered route /deals",
+      "rendered page Deals with crud layout",
+      "rendered component Deal Table",
+      "rendered component Deal Form",
+      "registered route /activities",
+      "rendered page Activities with crud layout",
+      "rendered component Activity Table",
+      "rendered component Activity Form",
+      "created table contacts(company_id, created_at, email, id, name, owner_id)",
+      "created table companies(created_at, domain, id, name)",
+      "created table deals(amount, contact_id, created_at, id, owner_id, stage, title)",
+      "created table activities(created_at, description, id, name, owner_id)",
+      "created table users(email, id, password_hash, role)",
+      "created relationship contacts.company_id -> companies",
+      "created relationship deals.contact_id -> contacts",
+      "registered endpoint POST /api/auth/login",
+      "bound POST /api/auth/login to users",
+      "registered endpoint GET /api/companies",
+      "bound GET /api/companies to companies",
+      "registered endpoint POST /api/companies",
+      "bound POST /api/companies to companies",
+      "registered endpoint GET /api/deals",
+      "bound GET /api/deals to deals",
+      "registered endpoint POST /api/deals",
+      "bound POST /api/deals to deals",
+      "registered endpoint GET /api/activities",
+      "bound GET /api/activities to activities",
+      "registered endpoint POST /api/activities",
+      "bound POST /api/activities to activities",
+      "registered endpoint POST /api/contacts",
+      "bound POST /api/contacts to contacts",
+      "loaded auth role admin",
+      "loaded auth role user",
+      "loaded permission delete:activity",
+      "loaded permission delete:company",
+      "loaded permission delete:contact",
+      "loaded permission delete:deal",
+      "loaded permission manage:activity",
+      "loaded permission manage:company",
+      "loaded permission manage:contact",
+      "loaded permission manage:deal",
+      "loaded permission manage:users",
+      "loaded permission read:activity",
+      "loaded permission read:company",
+      "loaded permission read:contact",
+      "loaded permission read:deal",
+      "loaded permission write:activity",
+      "loaded permission write:company",
+      "loaded permission write:contact",
+      "loaded permission write:deal",
+      "verified form login_form submits to /api/auth/login",
+      "checked permission read:contact for /dashboard",
+      "checked permission read:contact for /contacts",
+      "checked permission write:contact for /contacts",
+      "verified form contact_form submits to /api/contacts",
+      "checked permission read:company for /companies",
+      "checked permission write:company for /companies",
+      "verified form company_form submits to /api/companies",
+      "checked permission read:deal for /deals",
+      "checked permission write:deal for /deals",
+      "verified form deal_form submits to /api/deals",
+      "checked permission read:activity for /activities",
+      "checked permission write:activity for /activities",
+      "verified form activity_form submits to /api/activities",
+      "compiled business rule role-access",
+      "compiled business rule ownership-restriction"
+    ],
+    "errors": []
+  },
+  "quality_metrics": {
+    "consistency_score": 95,
+    "execution_readiness_score": 96,
+    "schema_completeness_score": 94,
+    "repairability_score": 92
+  }
+}

@@ -1,0 +1,3 @@
+Repair only the broken config section described by validation errors. Preserve
+valid sections. Do not regenerate the whole config unless more than 40 percent
+of sections fail validation.

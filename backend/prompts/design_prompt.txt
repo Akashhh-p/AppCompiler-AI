@@ -1,0 +1,3 @@
+Transform structured intent into a system design. Define entities, pages,
+forms, API endpoints, database tables, roles, permissions, and business rules.
+Use deterministic names. Return only JSON matching SystemDesign.

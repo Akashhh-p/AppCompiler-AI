@@ -1,0 +1,1363 @@
+{
+  "pipeline": {
+    "id": "d7fa2f58-a964-5a08-bb62-597d1622826f",
+    "input_prompt": "Build a project management app with teams, tasks, deadlines, comments, files, and manager analytics.",
+    "stage_status": [
+      {
+        "stage": "intent_extraction",
+        "status": "passed",
+        "latency_ms": 0.11,
+        "summary": "Extracted structured intent."
+      },
+      {
+        "stage": "system_design",
+        "status": "passed",
+        "latency_ms": 0.16,
+        "summary": "Designed config-driven architecture."
+      },
+      {
+        "stage": "schema_generation",
+        "status": "passed",
+        "latency_ms": 1.11,
+        "summary": "Generated strict app_config schema."
+      },
+      {
+        "stage": "refinement",
+        "status": "passed",
+        "latency_ms": 2.08,
+        "summary": "Normalized permissions, deduped surfaces, and completed business rules."
+      },
+      {
+        "stage": "validation",
+        "status": "passed",
+        "latency_ms": 0.18,
+        "summary": "0 errors, 0 warnings."
+      },
+      {
+        "stage": "repair",
+        "status": "skipped",
+        "latency_ms": 0.03,
+        "summary": "No repair needed."
+      },
+      {
+        "stage": "execution_simulation",
+        "status": "passed",
+        "latency_ms": 0.11,
+        "summary": "Simulated routes, UI, API, DB, auth, permissions, and business rules."
+      }
+    ],
+    "total_latency_ms": 3.91,
+    "deterministic_mode": true,
+    "injected_fault": null
+  },
+  "app": {
+    "name": "Project Management Builder",
+    "slug": "project-management-builder",
+    "version": "1.0.0",
+    "description": "Build a project management app with teams, tasks, deadlines, comments, files, and manager analytics."
+  },
+  "assumptions": [],
+  "intent": {
+    "app_type": "project_management",
+    "domain": "project_management",
+    "primary_goal": "Build a project management app with teams, tasks, deadlines, comments, files, and manager analytics.",
+    "features": [
+      "tasks",
+      "deadlines",
+      "analytics"
+    ],
+    "requested_entities": [
+      "team",
+      "task",
+      "comment",
+      "file",
+      "analytics_event"
+    ],
+    "requested_roles": [
+      "user",
+      "manager"
+    ],
+    "auth_required": true,
+    "payments_required": false,
+    "analytics_required": true,
+    "premium_required": false,
+    "crud_required": true,
+    "ambiguities": [],
+    "conflicts": [],
+    "missing_details": [],
+    "assumptions": []
+  },
+  "design": {
+    "architecture": "config-driven full-stack application",
+    "modules": [
+      "ui",
+      "api",
+      "database",
+      "auth",
+      "validation",
+      "runtime_simulation",
+      "analytics"
+    ],
+    "entities": [
+      {
+        "name": "team",
+        "description": "Team records used by the project_management app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "task",
+        "description": "Task records used by the project_management app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "comment",
+        "description": "Comment records used by the project_management app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "file",
+        "description": "File records used by the project_management app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "analytics_event",
+        "description": "Analytics Event records used by the project_management app.",
+        "fields": [
+          "id",
+          "event_name",
+          "actor_id",
+          "created_at"
+        ]
+      }
+    ],
+    "roles": [
+      "user",
+      "manager",
+      "admin"
+    ],
+    "user_flows": [
+      "login",
+      "dashboard",
+      "manage teams",
+      "manage tasks",
+      "manage comments",
+      "manage files",
+      "admin analytics review"
+    ],
+    "access_model": {
+      "default_read_roles": [
+        "user",
+        "manager",
+        "admin"
+      ],
+      "write_roles": [
+        "user",
+        "manager",
+        "admin"
+      ],
+      "admin_only": [
+        "analytics",
+        "user_management"
+      ],
+      "premium_requires": null
+    },
+    "data_model_summary": "5 domain entities compiled into relational tables with inferred relationships.",
+    "business_rules_summary": "Role access, ownership checks, CRUD permissions, and audit-safe persistence.",
+    "risk_notes": [],
+    "app_name": "Project Management Builder",
+    "summary": "Build a project management app with teams, tasks, deadlines, comments, files, and manager analytics.",
+    "premium_required": false,
+    "analytics_required": true,
+    "payments_required": false
+  },
+  "entities": [
+    {
+      "name": "team",
+      "table": "teams",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "task",
+      "table": "tasks",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "comment",
+      "table": "comments",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "file",
+      "table": "files",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "analytics_event",
+      "table": "analytics_events",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "event_name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "actor_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "layout": "auth",
+        "components": [
+          {
+            "name": "Login Form",
+            "type": "form",
+            "entity": "user"
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "layout": "dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Summary Metrics",
+            "type": "metric",
+            "entity": "team"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:team"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Teams",
+        "route": "/teams",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Team Table",
+            "type": "table",
+            "entity": "team"
+          },
+          {
+            "name": "Team Form",
+            "type": "form",
+            "entity": "team"
+          }
+        ],
+        "forms": [
+          {
+            "name": "team_form",
+            "entity": "team",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/teams"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:team",
+          "write:team"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Tasks",
+        "route": "/tasks",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Task Table",
+            "type": "table",
+            "entity": "task"
+          },
+          {
+            "name": "Task Form",
+            "type": "form",
+            "entity": "task"
+          }
+        ],
+        "forms": [
+          {
+            "name": "task_form",
+            "entity": "task",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/tasks"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:task",
+          "write:task"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Comments",
+        "route": "/comments",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Comment Table",
+            "type": "table",
+            "entity": "comment"
+          },
+          {
+            "name": "Comment Form",
+            "type": "form",
+            "entity": "comment"
+          }
+        ],
+        "forms": [
+          {
+            "name": "comment_form",
+            "entity": "comment",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/comments"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:comment",
+          "write:comment"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Files",
+        "route": "/files",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "File Table",
+            "type": "table",
+            "entity": "file"
+          },
+          {
+            "name": "File Form",
+            "type": "form",
+            "entity": "file"
+          }
+        ],
+        "forms": [
+          {
+            "name": "file_form",
+            "entity": "file",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/files"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:file",
+          "write:file"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Admin Analytics",
+        "route": "/admin/analytics",
+        "layout": "analytics",
+        "components": [
+          {
+            "name": "Analytics Metrics",
+            "type": "metric",
+            "entity": "analytics_event"
+          },
+          {
+            "name": "Funnel Chart",
+            "type": "chart",
+            "entity": "analytics_event"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "admin"
+        ],
+        "required_permissions": [
+          "read:analytics"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "validations": [
+          "password_hash_transform"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      },
+      {
+        "name": "get_teams",
+        "method": "GET",
+        "path": "/api/teams",
+        "entity": "team",
+        "table": "teams",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:team"
+        ]
+      },
+      {
+        "name": "post_teams",
+        "method": "POST",
+        "path": "/api/teams",
+        "entity": "team",
+        "table": "teams",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:team"
+        ]
+      },
+      {
+        "name": "get_tasks",
+        "method": "GET",
+        "path": "/api/tasks",
+        "entity": "task",
+        "table": "tasks",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:task"
+        ]
+      },
+      {
+        "name": "post_tasks",
+        "method": "POST",
+        "path": "/api/tasks",
+        "entity": "task",
+        "table": "tasks",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:task"
+        ]
+      },
+      {
+        "name": "get_comments",
+        "method": "GET",
+        "path": "/api/comments",
+        "entity": "comment",
+        "table": "comments",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:comment"
+        ]
+      },
+      {
+        "name": "post_comments",
+        "method": "POST",
+        "path": "/api/comments",
+        "entity": "comment",
+        "table": "comments",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:comment"
+        ]
+      },
+      {
+        "name": "get_files",
+        "method": "GET",
+        "path": "/api/files",
+        "entity": "file",
+        "table": "files",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:file"
+        ]
+      },
+      {
+        "name": "post_files",
+        "method": "POST",
+        "path": "/api/files",
+        "entity": "file",
+        "table": "files",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:file"
+        ]
+      },
+      {
+        "name": "get_analytics_events",
+        "method": "GET",
+        "path": "/api/analytics-events",
+        "entity": "analytics_event",
+        "table": "analytics_events",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:analytics_event"
+        ]
+      },
+      {
+        "name": "read_analytics",
+        "method": "GET",
+        "path": "/api/admin/analytics",
+        "entity": "analytics_event",
+        "table": "analytics_events",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [
+          "admin_role_required"
+        ],
+        "required_roles": [
+          "admin"
+        ],
+        "required_permissions": [
+          "read:analytics"
+        ]
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "teams",
+        "entity": "team",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "tasks",
+        "entity": "task",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "comments",
+        "entity": "comment",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "files",
+        "entity": "file",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "analytics_events",
+        "entity": "analytics_event",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "event_name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "actor_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": []
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "admin",
+        "description": "Admin role"
+      },
+      {
+        "name": "manager",
+        "description": "Manager role"
+      },
+      {
+        "name": "user",
+        "description": "User role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "delete:analytics_event",
+        "description": "Allows delete:analytics_event",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:comment",
+        "description": "Allows delete:comment",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:file",
+        "description": "Allows delete:file",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:task",
+        "description": "Allows delete:task",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:team",
+        "description": "Allows delete:team",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:analytics_event",
+        "description": "Allows manage:analytics_event",
+        "roles": [
+          "admin",
+          "manager"
+        ]
+      },
+      {
+        "name": "manage:comment",
+        "description": "Allows manage:comment",
+        "roles": [
+          "admin",
+          "manager"
+        ]
+      },
+      {
+        "name": "manage:file",
+        "description": "Allows manage:file",
+        "roles": [
+          "admin",
+          "manager"
+        ]
+      },
+      {
+        "name": "manage:task",
+        "description": "Allows manage:task",
+        "roles": [
+          "admin",
+          "manager"
+        ]
+      },
+      {
+        "name": "manage:team",
+        "description": "Allows manage:team",
+        "roles": [
+          "admin",
+          "manager"
+        ]
+      },
+      {
+        "name": "manage:users",
+        "description": "Allows manage:users",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "read:analytics",
+        "description": "Allows read:analytics",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "read:analytics_event",
+        "description": "Allows read:analytics_event",
+        "roles": [
+          "admin",
+          "manager",
+          "user"
+        ]
+      },
+      {
+        "name": "read:comment",
+        "description": "Allows read:comment",
+        "roles": [
+          "admin",
+          "manager",
+          "user"
+        ]
+      },
+      {
+        "name": "read:file",
+        "description": "Allows read:file",
+        "roles": [
+          "admin",
+          "manager",
+          "user"
+        ]
+      },
+      {
+        "name": "read:task",
+        "description": "Allows read:task",
+        "roles": [
+          "admin",
+          "manager",
+          "user"
+        ]
+      },
+      {
+        "name": "read:team",
+        "description": "Allows read:team",
+        "roles": [
+          "admin",
+          "manager",
+          "user"
+        ]
+      },
+      {
+        "name": "write:analytics_event",
+        "description": "Allows write:analytics_event",
+        "roles": [
+          "admin",
+          "manager",
+          "user"
+        ]
+      },
+      {
+        "name": "write:comment",
+        "description": "Allows write:comment",
+        "roles": [
+          "admin",
+          "manager",
+          "user"
+        ]
+      },
+      {
+        "name": "write:file",
+        "description": "Allows write:file",
+        "roles": [
+          "admin",
+          "manager",
+          "user"
+        ]
+      },
+      {
+        "name": "write:task",
+        "description": "Allows write:task",
+        "roles": [
+          "admin",
+          "manager",
+          "user"
+        ]
+      },
+      {
+        "name": "write:team",
+        "description": "Allows write:team",
+        "roles": [
+          "admin",
+          "manager",
+          "user"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "role-access",
+      "description": "Protected pages and APIs require declared roles and permissions.",
+      "expression": "all(required_permissions in user.permissions)",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "ownership-restriction",
+      "description": "Users may update only records they own unless they have manage permission.",
+      "expression": "record.owner_id == user.id or user.has_manage_permission",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "admin-analytics-access",
+      "description": "Admin analytics requires admin role and read:analytics permission.",
+      "expression": "user.role == 'admin' and 'read:analytics' in user.permissions",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": false,
+    "repair_count": 0
+  },
+  "repair_history": [],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "rendered page Login with auth layout",
+      "rendered component Login Form",
+      "registered route /dashboard",
+      "rendered page Dashboard with dashboard layout",
+      "rendered component Navigation",
+      "rendered component Summary Metrics",
+      "registered route /teams",
+      "rendered page Teams with crud layout",
+      "rendered component Team Table",
+      "rendered component Team Form",
+      "registered route /tasks",
+      "rendered page Tasks with crud layout",
+      "rendered component Task Table",
+      "rendered component Task Form",
+      "registered route /comments",
+      "rendered page Comments with crud layout",
+      "rendered component Comment Table",
+      "rendered component Comment Form",
+      "registered route /files",
+      "rendered page Files with crud layout",
+      "rendered component File Table",
+      "rendered component File Form",
+      "registered route /admin/analytics",
+      "rendered page Admin Analytics with analytics layout",
+      "rendered component Analytics Metrics",
+      "rendered component Funnel Chart",
+      "created table teams(created_at, description, id, name, owner_id)",
+      "created table tasks(created_at, description, id, name, owner_id)",
+      "created table comments(created_at, description, id, name, owner_id)",
+      "created table files(created_at, description, id, name, owner_id)",
+      "created table analytics_events(actor_id, created_at, event_name, id)",
+      "created table users(email, id, password_hash, role)",
+      "registered endpoint POST /api/auth/login",
+      "bound POST /api/auth/login to users",
+      "registered endpoint GET /api/teams",
+      "bound GET /api/teams to teams",
+      "registered endpoint POST /api/teams",
+      "bound POST /api/teams to teams",
+      "registered endpoint GET /api/tasks",
+      "bound GET /api/tasks to tasks",
+      "registered endpoint POST /api/tasks",
+      "bound POST /api/tasks to tasks",
+      "registered endpoint GET /api/comments",
+      "bound GET /api/comments to comments",
+      "registered endpoint POST /api/comments",
+      "bound POST /api/comments to comments",
+      "registered endpoint GET /api/files",
+      "bound GET /api/files to files",
+      "registered endpoint POST /api/files",
+      "bound POST /api/files to files",
+      "registered endpoint GET /api/analytics-events",
+      "bound GET /api/analytics-events to analytics_events",
+      "registered endpoint GET /api/admin/analytics",
+      "bound GET /api/admin/analytics to analytics_events",
+      "loaded auth role admin",
+      "loaded auth role manager",
+      "loaded auth role user",
+      "loaded permission delete:analytics_event",
+      "loaded permission delete:comment",
+      "loaded permission delete:file",
+      "loaded permission delete:task",
+      "loaded permission delete:team",
+      "loaded permission manage:analytics_event",
+      "loaded permission manage:comment",
+      "loaded permission manage:file",
+      "loaded permission manage:task",
+      "loaded permission manage:team",
+      "loaded permission manage:users",
+      "loaded permission read:analytics",
+      "loaded permission read:analytics_event",
+      "loaded permission read:comment",
+      "loaded permission read:file",
+      "loaded permission read:task",
+      "loaded permission read:team",
+      "loaded permission write:analytics_event",
+      "loaded permission write:comment",
+      "loaded permission write:file",
+      "loaded permission write:task",
+      "loaded permission write:team",
+      "verified form login_form submits to /api/auth/login",
+      "checked permission read:team for /dashboard",
+      "checked permission read:team for /teams",
+      "checked permission write:team for /teams",
+      "verified form team_form submits to /api/teams",
+      "checked permission read:task for /tasks",
+      "checked permission write:task for /tasks",
+      "verified form task_form submits to /api/tasks",
+      "checked permission read:comment for /comments",
+      "checked permission write:comment for /comments",
+      "verified form comment_form submits to /api/comments",
+      "checked permission read:file for /files",
+      "checked permission write:file for /files",
+      "verified form file_form submits to /api/files",
+      "checked permission read:analytics for /admin/analytics",
+      "compiled business rule role-access",
+      "compiled business rule ownership-restriction",
+      "compiled business rule admin-analytics-access",
+      "verified admin analytics access check"
+    ],
+    "errors": []
+  },
+  "quality_metrics": {
+    "consistency_score": 95,
+    "execution_readiness_score": 96,
+    "schema_completeness_score": 94,
+    "repairability_score": 92
+  }
+}

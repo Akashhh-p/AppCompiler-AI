@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ConfigForge AI</title>
+    <style>
+      :root { font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", sans-serif; background: #f4f6f8; color: #161a22; }
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      main { width: min(1440px, 100%); margin: 0 auto; padding: 24px; }
+      header { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 18px; }
+      h1 { margin: 0; font-size: 32px; letter-spacing: 0; }
+      .subtitle { margin: 4px 0 0; color: #5b6573; }
+      .grid { display: grid; grid-template-columns: 420px 1fr; gap: 16px; align-items: start; }
+      .panel, .card { background: #fff; border: 1px solid #dfe4ea; border-radius: 8px; padding: 16px; }
+      textarea { width: 100%; min-height: 190px; resize: vertical; border: 1px solid #c8d0da; border-radius: 6px; padding: 12px; font: inherit; line-height: 1.45; }
+      button { border: 0; border-radius: 6px; padding: 10px 13px; font-weight: 700; cursor: pointer; background: #116466; color: white; }
+      button.dark { background: #252b34; }
+      button.warn { background: #9a4d16; }
+      button.chip { color: #20242c; background: #eef2f5; border: 1px solid #d9e0e7; padding: 7px 9px; font-weight: 650; }
+      .actions, .chips, .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+      .metrics { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
+      .metric { border: 1px solid #e3e7ec; border-radius: 6px; padding: 10px; background: #fafbfc; min-height: 70px; }
+      .metric span { display: block; color: #66717f; font-size: 12px; }
+      .metric strong { display: block; margin-top: 6px; font-size: 20px; overflow-wrap: anywhere; }
+      .timeline { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin: 12px 0; }
+      .stage { border: 1px solid #dfe4ea; border-radius: 6px; padding: 8px; background: #fff; min-height: 72px; }
+      .stage b { display: block; font-size: 12px; }
+      .stage small { color: #687484; }
+      .stage.passed { border-color: #7ab893; background: #f3faf6; }
+      .stage.failed { border-color: #d28a8a; background: #fff6f6; }
+      .eval-grid { display: none; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+      .eval-grid.visible { display: grid; }
+      .eval-card { border: 1px solid #dfe4ea; border-radius: 6px; padding: 10px; background: #fbfcfd; }
+      .eval-card span { display: block; color: #66717f; font-size: 12px; }
+      .eval-card strong { display: block; margin-top: 5px; font-size: 20px; }
+      .tabs button { background: #eef2f5; color: #20242c; border: 1px solid #d7dee6; }
+      .tabs button.active { background: #116466; color: white; border-color: #116466; }
+      pre { margin: 0; min-height: 520px; max-height: 720px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #111827; color: #e7edf5; border-radius: 8px; padding: 14px; font-size: 13px; line-height: 1.45; }
+      .status { min-height: 22px; margin-top: 10px; color: #116466; font-size: 13px; }
+      @media (max-width: 960px) {
+        main { padding: 14px; }
+        header, .grid { display: block; }
+        .panel { margin-bottom: 14px; }
+        .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .timeline { grid-template-columns: repeat(2, 1fr); }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <h1>ConfigForge AI</h1>
+          <p class="subtitle">Compiler-style AI software generator</p>
+        </div>
+      </header>
+      <section class="grid">
+        <aside class="panel">
+          <textarea id="prompt" placeholder="Describe the application you want to build...">Build a CRM with login, contacts, deals, dashboard, role-based access, premium plan with payments. Admins can see analytics.</textarea>
+          <div class="actions">
+            <button id="generate">Generate App Config</button>
+            <button id="evaluate" class="dark">Run Evaluation</button>
+            <button id="fault" class="warn">Generate With Fault Injection</button>
+          </div>
+          <div class="chips" id="chips"></div>
+          <div class="status" id="status"></div>
+        </aside>
+        <section>
+          <div class="metrics">
+            <div class="metric"><span>Validation status</span><strong id="validation">-</strong></div>
+            <div class="metric"><span>Execution status</span><strong id="execution">-</strong></div>
+            <div class="metric"><span>Repair count</span><strong id="repairs">-</strong></div>
+            <div class="metric"><span>Latency</span><strong id="latency">-</strong></div>
+            <div class="metric"><span>Consistency score</span><strong id="score">-</strong></div>
+          </div>
+          <div class="panel">
+            <div class="timeline" id="timeline"></div>
+            <div class="tabs" id="tabs"></div>
+            <div class="eval-grid" id="evaluationGrid"></div>
+            <pre id="output">Generate an app config or run the evaluator.</pre>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script>
+      const api = window.location.origin;
+      const promptBox = document.getElementById("prompt");
+      const output = document.getElementById("output");
+      const status = document.getElementById("status");
+      const tabNames = ["Intent", "Design", "UI", "API", "Database", "Auth", "Business Logic", "Validation", "Repair History", "Execution", "Full JSON", "Evaluation"];
+      let latest = null;
+      let evaluation = null;
+
+      const examples = {
+        "CRM": "Build a CRM with login, contacts, deals, dashboard, role-based access, premium plan with payments. Admins can see analytics.",
+        "E-commerce": "Build an e-commerce store with products, cart, orders, payments, customer accounts, and admin inventory.",
+        "Hospital System": "Build a hospital appointment system with doctors, patients, appointments, prescriptions, and receptionist role.",
+        "School ERP": "Build a school ERP with students, teachers, attendance, exams, fees, and admin dashboard.",
+        "Inventory": "Build an inventory management system with suppliers, purchase orders, stock alerts, and warehouse users.",
+        "Food Delivery": "Build a food delivery app with restaurants, menus, carts, orders, delivery tracking, and payments.",
+        "Job Portal": "Build a job portal with candidates, recruiters, job posts, applications, and premium recruiter plans.",
+        "LMS": "Build an LMS with courses, lessons, quizzes, progress tracking, certificates, and instructor role."
+      };
+
+      document.getElementById("chips").innerHTML = Object.entries(examples).map(([label, value]) => `<button class="chip" data-prompt="${value.replaceAll('"', "&quot;")}">${label}</button>`).join("");
+      document.querySelectorAll(".chip").forEach(btn => btn.addEventListener("click", () => { promptBox.value = btn.dataset.prompt; }));
+      document.getElementById("tabs").innerHTML = tabNames.map((name, index) => `<button data-tab="${name}" class="${index === 10 ? "active" : ""}">${name}</button>`).join("");
+      document.querySelectorAll("#tabs button").forEach(btn => btn.addEventListener("click", () => selectTab(btn.dataset.tab)));
+
+      async function generate(injectFault) {
+        status.textContent = injectFault ? "Compiling with controlled fault injection..." : "Compiling...";
+        const res = await fetch(`${api}/generate?inject_fault=${injectFault}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: promptBox.value })
+        });
+        latest = await res.json();
+        evaluation = null;
+        renderSummary(latest);
+        renderTimeline(latest.pipeline.stage_status);
+        selectTab("Full JSON");
+        status.textContent = "Done. Output saved under outputs/generated_configs.";
+      }
+
+      async function runEvaluation() {
+        status.textContent = "Running 20-prompt evaluation...";
+        const res = await fetch(`${api}/evaluate`, { method: "POST" });
+        evaluation = await res.json();
+        latest = null;
+        document.getElementById("validation").textContent = `${Math.round(evaluation.success_rate * 100)}%`;
+        document.getElementById("execution").textContent = `${evaluation.failed} failed`;
+        document.getElementById("repairs").textContent = evaluation.average_repairs_per_request;
+        document.getElementById("latency").textContent = `${evaluation.average_latency_ms} ms`;
+        document.getElementById("score").textContent = "-";
+        renderTimeline([]);
+        renderEvaluationGrid(evaluation);
+        selectTab("Evaluation");
+        status.textContent = "Evaluation complete. Reports saved under outputs/.";
+      }
+
+      function renderSummary(data) {
+        document.getElementById("validation").textContent = data.validation.status;
+        document.getElementById("execution").textContent = data.execution.status;
+        document.getElementById("repairs").textContent = data.validation.repair_count;
+        document.getElementById("latency").textContent = `${data.pipeline.total_latency_ms} ms`;
+        document.getElementById("score").textContent = data.quality_metrics.consistency_score;
+      }
+
+      function renderTimeline(stages) {
+        const fallback = ["Intent Extraction", "System Design", "Schema Generation", "Refinement", "Validation", "Repair", "Execution"];
+        document.getElementById("timeline").innerHTML = (stages.length ? stages : fallback.map(stage => ({ stage, status: "-", latency_ms: 0, summary: "" }))).map(stage => `
+          <div class="stage ${stage.status === "passed" ? "passed" : stage.status === "failed" ? "failed" : ""}"><b>${stage.status === "passed" ? "PASS" : stage.status === "failed" ? "FAIL" : "WAIT"} · ${stage.stage.replaceAll("_", " ")}</b><small>${stage.latency_ms} ms</small></div>
+        `).join("");
+      }
+
+      function renderEvaluationGrid(data) {
+        const grid = document.getElementById("evaluationGrid");
+        grid.classList.add("visible");
+        grid.innerHTML = [
+          ["Total Prompts", data.total_prompts],
+          ["Direct Pass", data.passed_without_repair],
+          ["Repaired", data.passed_after_repair],
+          ["Failed", data.failed],
+          ["Success", `${Math.round(data.success_rate * 100)}%`],
+          ["Avg Repairs", data.average_repairs_per_request],
+          ["Avg Latency", `${data.average_latency_ms} ms`]
+        ].map(([label, value]) => `<div class="eval-card"><span>${label}</span><strong>${value}</strong></div>`).join("");
+      }
+
+      function selectTab(tab) {
+        document.querySelectorAll("#tabs button").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tab));
+        if (tab === "Evaluation") {
+          document.getElementById("evaluationGrid").classList.toggle("visible", Boolean(evaluation));
+          output.textContent = JSON.stringify(evaluation || { message: "Run evaluation first." }, null, 2);
+          return;
+        }
+        document.getElementById("evaluationGrid").classList.remove("visible");
+        if (!latest) {
+          output.textContent = "Generate an app config first.";
+          return;
+        }
+        const map = {
+          "Intent": latest.intent,
+          "Design": latest.design,
+          "UI": latest.ui,
+          "API": latest.api,
+          "Database": latest.database,
+          "Auth": latest.auth,
+          "Business Logic": latest.business_logic,
+          "Validation": latest.validation,
+          "Repair History": latest.repair_history,
+          "Execution": latest.execution,
+          "Full JSON": latest
+        };
+        output.textContent = JSON.stringify(map[tab], null, 2);
+      }
+
+      document.getElementById("generate").addEventListener("click", () => generate(false));
+      document.getElementById("fault").addEventListener("click", () => generate(true));
+      document.getElementById("evaluate").addEventListener("click", runEvaluation);
+      renderTimeline([]);
+    </script>
+  </body>
+</html>

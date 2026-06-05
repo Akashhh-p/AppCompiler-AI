@@ -1,0 +1,692 @@
+{
+  "app": {
+    "name": "Metric Manager",
+    "slug": "metric-manager",
+    "version": "1.0.0",
+    "description": "Build a project app with tasks and dashboard but no database."
+  },
+  "assumptions": [
+    "Intent extraction used deterministic local rules in 0.03 ms."
+  ],
+  "entities": [
+    {
+      "name": "metric",
+      "table": "metrics",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "value",
+          "type": "float",
+          "required": true,
+          "computed": true
+        },
+        {
+          "name": "computed_at",
+          "type": "datetime",
+          "required": true,
+          "computed": true
+        }
+      ]
+    },
+    {
+      "name": "project",
+      "table": "projects",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "task",
+      "table": "tasks",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "comment",
+      "table": "comments",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Metric Table",
+            "type": "table",
+            "entity": "metric"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Projects",
+        "route": "/projects",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Project Table",
+            "type": "table",
+            "entity": "project"
+          },
+          {
+            "name": "Project Form",
+            "type": "form",
+            "entity": "project"
+          }
+        ],
+        "forms": [
+          {
+            "name": "project_form",
+            "entity": "project",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/projects"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Tasks",
+        "route": "/tasks",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Task Table",
+            "type": "table",
+            "entity": "task"
+          },
+          {
+            "name": "Task Form",
+            "type": "form",
+            "entity": "task"
+          }
+        ],
+        "forms": [
+          {
+            "name": "task_form",
+            "entity": "task",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/tasks"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Comments",
+        "route": "/comments",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Comment Table",
+            "type": "table",
+            "entity": "comment"
+          },
+          {
+            "name": "Comment Form",
+            "type": "form",
+            "entity": "comment"
+          }
+        ],
+        "forms": [
+          {
+            "name": "comment_form",
+            "entity": "comment",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/comments"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "list_metrics",
+        "method": "GET",
+        "path": "/api/metrics",
+        "entity": "metric",
+        "table": "metrics",
+        "body_fields": [],
+        "computed_fields": [
+          "value",
+          "computed_at"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "list_projects",
+        "method": "GET",
+        "path": "/api/projects",
+        "entity": "project",
+        "table": "projects",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_projects",
+        "method": "POST",
+        "path": "/api/projects",
+        "entity": "project",
+        "table": "projects",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_tasks",
+        "method": "GET",
+        "path": "/api/tasks",
+        "entity": "task",
+        "table": "tasks",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_tasks",
+        "method": "POST",
+        "path": "/api/tasks",
+        "entity": "task",
+        "table": "tasks",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "list_comments",
+        "method": "GET",
+        "path": "/api/comments",
+        "entity": "comment",
+        "table": "comments",
+        "body_fields": [],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:dashboard"
+        ]
+      },
+      {
+        "name": "create_comments",
+        "method": "POST",
+        "path": "/api/comments",
+        "entity": "comment",
+        "table": "comments",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:records"
+        ]
+      },
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "metrics",
+        "entity": "metric",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "value",
+            "type": "float",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "computed_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "projects",
+        "entity": "project",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "tasks",
+        "entity": "task",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "comments",
+        "entity": "comment",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": []
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "user",
+        "description": "User role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "read:dashboard",
+        "description": "Allows read:dashboard",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:records",
+        "description": "Allows write:records",
+        "roles": [
+          "user"
+        ]
+      }
+    ]
+  },
+  "business_logic": [],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": false,
+    "repair_count": 0
+  },
+  "repair_history": [],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "registered route /dashboard",
+      "registered route /projects",
+      "registered route /tasks",
+      "registered route /comments",
+      "created table metrics(computed_at, id, name, value)",
+      "created table projects(created_at, description, id, name, owner_id)",
+      "created table tasks(created_at, description, id, name, owner_id)",
+      "created table comments(created_at, description, id, name, owner_id)",
+      "created table users(email, id, password_hash)",
+      "bound GET /api/metrics to metrics",
+      "bound GET /api/projects to projects",
+      "bound POST /api/projects to projects",
+      "bound GET /api/tasks to tasks",
+      "bound POST /api/tasks to tasks",
+      "bound GET /api/comments to comments",
+      "bound POST /api/comments to comments",
+      "bound POST /api/auth/login to users",
+      "verified form login_form submits to /api/auth/login",
+      "verified form project_form submits to /api/projects",
+      "verified form task_form submits to /api/tasks",
+      "verified form comment_form submits to /api/comments"
+    ],
+    "errors": []
+  }
+}

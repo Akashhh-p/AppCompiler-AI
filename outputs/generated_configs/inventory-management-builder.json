@@ -1,0 +1,1158 @@
+{
+  "pipeline": {
+    "id": "6dcd9393-1043-5267-b567-aa29382f82a1",
+    "input_prompt": "Build an inventory app but no database.",
+    "stage_status": [
+      {
+        "stage": "intent_extraction",
+        "status": "passed",
+        "latency_ms": 0.1,
+        "summary": "Extracted structured intent."
+      },
+      {
+        "stage": "system_design",
+        "status": "passed",
+        "latency_ms": 0.1,
+        "summary": "Designed config-driven architecture."
+      },
+      {
+        "stage": "schema_generation",
+        "status": "passed",
+        "latency_ms": 0.85,
+        "summary": "Generated strict app_config schema."
+      },
+      {
+        "stage": "refinement",
+        "status": "passed",
+        "latency_ms": 1.71,
+        "summary": "Normalized permissions, deduped surfaces, and completed business rules."
+      },
+      {
+        "stage": "validation",
+        "status": "failed",
+        "latency_ms": 0.15,
+        "summary": "1 errors, 0 warnings."
+      },
+      {
+        "stage": "repair",
+        "status": "passed",
+        "latency_ms": 2.01,
+        "summary": "Applied 1 localized repair pass(es)."
+      },
+      {
+        "stage": "execution_simulation",
+        "status": "passed",
+        "latency_ms": 0.1,
+        "summary": "Simulated routes, UI, API, DB, auth, permissions, and business rules."
+      }
+    ],
+    "total_latency_ms": 5.12,
+    "deterministic_mode": true,
+    "injected_fault": "remove_endpoint"
+  },
+  "app": {
+    "name": "Inventory Management Builder",
+    "slug": "inventory-management-builder",
+    "version": "1.0.0",
+    "description": "Build an inventory app but no database."
+  },
+  "assumptions": [
+    "A software app was requested while database persistence was disabled."
+  ],
+  "intent": {
+    "app_type": "inventory_management",
+    "domain": "inventory_management",
+    "primary_goal": "Build an inventory app but no database.",
+    "features": [
+      "inventory",
+      "stock alerts"
+    ],
+    "requested_entities": [
+      "product",
+      "supplier",
+      "purchase_order",
+      "stock_alert"
+    ],
+    "requested_roles": [
+      "user"
+    ],
+    "auth_required": true,
+    "payments_required": false,
+    "analytics_required": false,
+    "premium_required": false,
+    "crud_required": true,
+    "ambiguities": [],
+    "conflicts": [
+      "A software app was requested while database persistence was disabled."
+    ],
+    "missing_details": [],
+    "assumptions": [
+      "Generated a database schema anyway because runtime simulation requires executable persistence contracts."
+    ]
+  },
+  "design": {
+    "architecture": "config-driven full-stack application",
+    "modules": [
+      "ui",
+      "api",
+      "database",
+      "auth",
+      "validation",
+      "runtime_simulation"
+    ],
+    "entities": [
+      {
+        "name": "product",
+        "description": "Product records used by the inventory_management app.",
+        "fields": [
+          "id",
+          "name",
+          "sku",
+          "price",
+          "stock",
+          "created_at"
+        ]
+      },
+      {
+        "name": "supplier",
+        "description": "Supplier records used by the inventory_management app.",
+        "fields": [
+          "id",
+          "name",
+          "email",
+          "created_at"
+        ]
+      },
+      {
+        "name": "purchase_order",
+        "description": "Purchase Order records used by the inventory_management app.",
+        "fields": [
+          "id",
+          "supplier_id",
+          "status",
+          "total_amount",
+          "created_at"
+        ]
+      },
+      {
+        "name": "stock_alert",
+        "description": "Stock Alert records used by the inventory_management app.",
+        "fields": [
+          "id",
+          "product_id",
+          "threshold",
+          "active",
+          "created_at"
+        ]
+      }
+    ],
+    "roles": [
+      "user"
+    ],
+    "user_flows": [
+      "login",
+      "dashboard",
+      "manage products",
+      "manage suppliers",
+      "manage purchase_orders",
+      "manage stock_alerts"
+    ],
+    "access_model": {
+      "default_read_roles": [
+        "user"
+      ],
+      "write_roles": [
+        "admin",
+        "manager"
+      ],
+      "admin_only": [
+        "analytics",
+        "user_management"
+      ],
+      "premium_requires": null
+    },
+    "data_model_summary": "4 domain entities compiled into relational tables with inferred relationships.",
+    "business_rules_summary": "Role access, ownership checks, CRUD permissions, and audit-safe persistence.",
+    "risk_notes": [
+      "A software app was requested while database persistence was disabled."
+    ],
+    "app_name": "Inventory Management Builder",
+    "summary": "Build an inventory app but no database.",
+    "premium_required": false,
+    "analytics_required": false,
+    "payments_required": false
+  },
+  "entities": [
+    {
+      "name": "product",
+      "table": "products",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "sku",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "price",
+          "type": "currency",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "stock",
+          "type": "integer",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "supplier",
+      "table": "suppliers",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "purchase_order",
+      "table": "purchase_orders",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "supplier_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "total_amount",
+          "type": "currency",
+          "required": true,
+          "computed": true
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "stock_alert",
+      "table": "stock_alerts",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "product_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "threshold",
+          "type": "integer",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "layout": "auth",
+        "components": [
+          {
+            "name": "Login Form",
+            "type": "form",
+            "entity": "user"
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "layout": "dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Summary Metrics",
+            "type": "metric",
+            "entity": "product"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:product"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Products",
+        "route": "/products",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Product Table",
+            "type": "table",
+            "entity": "product"
+          },
+          {
+            "name": "Product Form",
+            "type": "form",
+            "entity": "product"
+          }
+        ],
+        "forms": [
+          {
+            "name": "product_form",
+            "entity": "product",
+            "fields": [
+              "name",
+              "sku",
+              "price",
+              "stock"
+            ],
+            "submit_endpoint": "/api/products"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:product",
+          "write:product"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Suppliers",
+        "route": "/suppliers",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Supplier Table",
+            "type": "table",
+            "entity": "supplier"
+          },
+          {
+            "name": "Supplier Form",
+            "type": "form",
+            "entity": "supplier"
+          }
+        ],
+        "forms": [
+          {
+            "name": "supplier_form",
+            "entity": "supplier",
+            "fields": [
+              "name",
+              "email"
+            ],
+            "submit_endpoint": "/api/suppliers"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:supplier",
+          "write:supplier"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Purchase Orders",
+        "route": "/purchase-orders",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Purchase Order Table",
+            "type": "table",
+            "entity": "purchase_order"
+          },
+          {
+            "name": "Purchase Order Form",
+            "type": "form",
+            "entity": "purchase_order"
+          }
+        ],
+        "forms": [
+          {
+            "name": "purchase_order_form",
+            "entity": "purchase_order",
+            "fields": [
+              "supplier_id",
+              "status"
+            ],
+            "submit_endpoint": "/api/purchase-orders"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:purchase_order",
+          "write:purchase_order"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Stock Alerts",
+        "route": "/stock-alerts",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Stock Alert Table",
+            "type": "table",
+            "entity": "stock_alert"
+          },
+          {
+            "name": "Stock Alert Form",
+            "type": "form",
+            "entity": "stock_alert"
+          }
+        ],
+        "forms": [
+          {
+            "name": "stock_alert_form",
+            "entity": "stock_alert",
+            "fields": [
+              "product_id",
+              "threshold",
+              "active"
+            ],
+            "submit_endpoint": "/api/stock-alerts"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:stock_alert",
+          "write:stock_alert"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "validations": [
+          "password_hash_transform"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      },
+      {
+        "name": "get_suppliers",
+        "method": "GET",
+        "path": "/api/suppliers",
+        "entity": "supplier",
+        "table": "suppliers",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:supplier"
+        ]
+      },
+      {
+        "name": "post_suppliers",
+        "method": "POST",
+        "path": "/api/suppliers",
+        "entity": "supplier",
+        "table": "suppliers",
+        "body_fields": [
+          "name",
+          "email"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:supplier"
+        ]
+      },
+      {
+        "name": "get_purchase_orders",
+        "method": "GET",
+        "path": "/api/purchase-orders",
+        "entity": "purchase_order",
+        "table": "purchase_orders",
+        "body_fields": [],
+        "computed_fields": [
+          "total_amount"
+        ],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:purchase_order"
+        ]
+      },
+      {
+        "name": "post_purchase_orders",
+        "method": "POST",
+        "path": "/api/purchase-orders",
+        "entity": "purchase_order",
+        "table": "purchase_orders",
+        "body_fields": [
+          "supplier_id",
+          "status"
+        ],
+        "computed_fields": [
+          "total_amount"
+        ],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:purchase_order"
+        ]
+      },
+      {
+        "name": "get_stock_alerts",
+        "method": "GET",
+        "path": "/api/stock-alerts",
+        "entity": "stock_alert",
+        "table": "stock_alerts",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:stock_alert"
+        ]
+      },
+      {
+        "name": "post_stock_alerts",
+        "method": "POST",
+        "path": "/api/stock-alerts",
+        "entity": "stock_alert",
+        "table": "stock_alerts",
+        "body_fields": [
+          "product_id",
+          "threshold",
+          "active"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:stock_alert"
+        ]
+      },
+      {
+        "name": "auto_product_form",
+        "method": "POST",
+        "path": "/api/products",
+        "entity": "product",
+        "table": "products",
+        "body_fields": [
+          "name",
+          "sku",
+          "price",
+          "stock"
+        ],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:product",
+          "write:product"
+        ]
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "products",
+        "entity": "product",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "sku",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "price",
+            "type": "currency",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "stock",
+            "type": "integer",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "suppliers",
+        "entity": "supplier",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "purchase_orders",
+        "entity": "purchase_order",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "supplier_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "stock_alerts",
+        "entity": "stock_alert",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "product_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "threshold",
+            "type": "integer",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from_table": "purchase_orders",
+        "to_table": "suppliers",
+        "type": "one_to_many",
+        "field": "supplier_id"
+      },
+      {
+        "from_table": "stock_alerts",
+        "to_table": "products",
+        "type": "one_to_many",
+        "field": "product_id"
+      }
+    ]
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "user",
+        "description": "User role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "delete:product",
+        "description": "Allows delete:product",
+        "roles": []
+      },
+      {
+        "name": "delete:purchase_order",
+        "description": "Allows delete:purchase_order",
+        "roles": []
+      },
+      {
+        "name": "delete:stock_alert",
+        "description": "Allows delete:stock_alert",
+        "roles": []
+      },
+      {
+        "name": "delete:supplier",
+        "description": "Allows delete:supplier",
+        "roles": []
+      },
+      {
+        "name": "manage:product",
+        "description": "Allows manage:product",
+        "roles": []
+      },
+      {
+        "name": "manage:purchase_order",
+        "description": "Allows manage:purchase_order",
+        "roles": []
+      },
+      {
+        "name": "manage:stock_alert",
+        "description": "Allows manage:stock_alert",
+        "roles": []
+      },
+      {
+        "name": "manage:supplier",
+        "description": "Allows manage:supplier",
+        "roles": []
+      },
+      {
+        "name": "manage:users",
+        "description": "Allows manage:users",
+        "roles": []
+      },
+      {
+        "name": "read:product",
+        "description": "Allows read:product",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:purchase_order",
+        "description": "Allows read:purchase_order",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:stock_alert",
+        "description": "Allows read:stock_alert",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "read:supplier",
+        "description": "Allows read:supplier",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:product",
+        "description": "Allows write:product",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:purchase_order",
+        "description": "Allows write:purchase_order",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:stock_alert",
+        "description": "Allows write:stock_alert",
+        "roles": [
+          "user"
+        ]
+      },
+      {
+        "name": "write:supplier",
+        "description": "Allows write:supplier",
+        "roles": [
+          "user"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "role-access",
+      "description": "Protected pages and APIs require declared roles and permissions.",
+      "expression": "all(required_permissions in user.permissions)",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "ownership-restriction",
+      "description": "Users may update only records they own unless they have manage permission.",
+      "expression": "record.owner_id == user.id or user.has_manage_permission",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": true,
+    "repair_count": 1
+  },
+  "repair_history": [
+    {
+      "issue_code": "MISSING_API_ENDPOINT",
+      "location": "ui.pages./products.forms.product_form",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 7,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 8,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_API_ENDPOINT.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    }
+  ],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "rendered page Login with auth layout",
+      "rendered component Login Form",
+      "registered route /dashboard",
+      "rendered page Dashboard with dashboard layout",
+      "rendered component Navigation",
+      "rendered component Summary Metrics",
+      "registered route /products",
+      "rendered page Products with crud layout",
+      "rendered component Product Table",
+      "rendered component Product Form",
+      "registered route /suppliers",
+      "rendered page Suppliers with crud layout",
+      "rendered component Supplier Table",
+      "rendered component Supplier Form",
+      "registered route /purchase-orders",
+      "rendered page Purchase Orders with crud layout",
+      "rendered component Purchase Order Table",
+      "rendered component Purchase Order Form",
+      "registered route /stock-alerts",
+      "rendered page Stock Alerts with crud layout",
+      "rendered component Stock Alert Table",
+      "rendered component Stock Alert Form",
+      "created table products(created_at, id, name, price, sku, stock)",
+      "created table suppliers(created_at, email, id, name)",
+      "created table purchase_orders(created_at, id, status, supplier_id)",
+      "created table stock_alerts(active, created_at, id, product_id, threshold)",
+      "created table users(email, id, password_hash, role)",
+      "created relationship purchase_orders.supplier_id -> suppliers",
+      "created relationship stock_alerts.product_id -> products",
+      "registered endpoint POST /api/auth/login",
+      "bound POST /api/auth/login to users",
+      "registered endpoint GET /api/suppliers",
+      "bound GET /api/suppliers to suppliers",
+      "registered endpoint POST /api/suppliers",
+      "bound POST /api/suppliers to suppliers",
+      "registered endpoint GET /api/purchase-orders",
+      "bound GET /api/purchase-orders to purchase_orders",
+      "registered endpoint POST /api/purchase-orders",
+      "bound POST /api/purchase-orders to purchase_orders",
+      "registered endpoint GET /api/stock-alerts",
+      "bound GET /api/stock-alerts to stock_alerts",
+      "registered endpoint POST /api/stock-alerts",
+      "bound POST /api/stock-alerts to stock_alerts",
+      "registered endpoint POST /api/products",
+      "bound POST /api/products to products",
+      "loaded auth role user",
+      "loaded permission delete:product",
+      "loaded permission delete:purchase_order",
+      "loaded permission delete:stock_alert",
+      "loaded permission delete:supplier",
+      "loaded permission manage:product",
+      "loaded permission manage:purchase_order",
+      "loaded permission manage:stock_alert",
+      "loaded permission manage:supplier",
+      "loaded permission manage:users",
+      "loaded permission read:product",
+      "loaded permission read:purchase_order",
+      "loaded permission read:stock_alert",
+      "loaded permission read:supplier",
+      "loaded permission write:product",
+      "loaded permission write:purchase_order",
+      "loaded permission write:stock_alert",
+      "loaded permission write:supplier",
+      "verified form login_form submits to /api/auth/login",
+      "checked permission read:product for /dashboard",
+      "checked permission read:product for /products",
+      "checked permission write:product for /products",
+      "verified form product_form submits to /api/products",
+      "checked permission read:supplier for /suppliers",
+      "checked permission write:supplier for /suppliers",
+      "verified form supplier_form submits to /api/suppliers",
+      "checked permission read:purchase_order for /purchase-orders",
+      "checked permission write:purchase_order for /purchase-orders",
+      "verified form purchase_order_form submits to /api/purchase-orders",
+      "checked permission read:stock_alert for /stock-alerts",
+      "checked permission write:stock_alert for /stock-alerts",
+      "verified form stock_alert_form submits to /api/stock-alerts",
+      "compiled business rule role-access",
+      "compiled business rule ownership-restriction"
+    ],
+    "errors": []
+  },
+  "quality_metrics": {
+    "consistency_score": 95,
+    "execution_readiness_score": 96,
+    "schema_completeness_score": 94,
+    "repairability_score": 92
+  }
+}

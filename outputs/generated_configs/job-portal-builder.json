@@ -1,0 +1,2154 @@
+{
+  "pipeline": {
+    "id": "cb30b799-78cf-51d5-bd34-052e2e8fb362",
+    "input_prompt": "Build a job portal where candidates can manage recruiter-only pages.",
+    "stage_status": [
+      {
+        "stage": "intent_extraction",
+        "status": "passed",
+        "latency_ms": 0.1,
+        "summary": "Extracted structured intent."
+      },
+      {
+        "stage": "system_design",
+        "status": "passed",
+        "latency_ms": 0.4,
+        "summary": "Designed config-driven architecture."
+      },
+      {
+        "stage": "schema_generation",
+        "status": "passed",
+        "latency_ms": 1.02,
+        "summary": "Generated strict app_config schema."
+      },
+      {
+        "stage": "refinement",
+        "status": "passed",
+        "latency_ms": 2.07,
+        "summary": "Normalized permissions, deduped surfaces, and completed business rules."
+      },
+      {
+        "stage": "validation",
+        "status": "failed",
+        "latency_ms": 0.25,
+        "summary": "21 errors, 0 warnings."
+      },
+      {
+        "stage": "repair",
+        "status": "passed",
+        "latency_ms": 12.36,
+        "summary": "Applied 1 localized repair pass(es)."
+      },
+      {
+        "stage": "execution_simulation",
+        "status": "passed",
+        "latency_ms": 0.1,
+        "summary": "Simulated routes, UI, API, DB, auth, permissions, and business rules."
+      }
+    ],
+    "total_latency_ms": 16.41,
+    "deterministic_mode": true,
+    "injected_fault": "remove_role"
+  },
+  "app": {
+    "name": "Job Portal Builder",
+    "slug": "job-portal-builder",
+    "version": "1.0.0",
+    "description": "Build a job portal where candidates can manage recruiter-only pages."
+  },
+  "assumptions": [],
+  "intent": {
+    "app_type": "job_portal",
+    "domain": "job_portal",
+    "primary_goal": "Build a job portal where candidates can manage recruiter-only pages.",
+    "features": [
+      "jobs",
+      "applications"
+    ],
+    "requested_entities": [
+      "candidate",
+      "recruiter",
+      "job_post",
+      "application"
+    ],
+    "requested_roles": [
+      "user",
+      "recruiter",
+      "candidate"
+    ],
+    "auth_required": true,
+    "payments_required": false,
+    "analytics_required": false,
+    "premium_required": false,
+    "crud_required": true,
+    "ambiguities": [],
+    "conflicts": [],
+    "missing_details": [],
+    "assumptions": []
+  },
+  "design": {
+    "architecture": "config-driven full-stack application",
+    "modules": [
+      "ui",
+      "api",
+      "database",
+      "auth",
+      "validation",
+      "runtime_simulation"
+    ],
+    "entities": [
+      {
+        "name": "candidate",
+        "description": "Candidate records used by the job_portal app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "recruiter",
+        "description": "Recruiter records used by the job_portal app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "job_post",
+        "description": "Job Post records used by the job_portal app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "application",
+        "description": "Application records used by the job_portal app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      }
+    ],
+    "roles": [
+      "user",
+      "recruiter",
+      "candidate"
+    ],
+    "user_flows": [
+      "login",
+      "dashboard",
+      "manage candidates",
+      "manage recruiters",
+      "manage job_posts",
+      "manage applications"
+    ],
+    "access_model": {
+      "default_read_roles": [
+        "user",
+        "recruiter",
+        "candidate"
+      ],
+      "write_roles": [
+        "user",
+        "recruiter",
+        "candidate"
+      ],
+      "admin_only": [
+        "analytics",
+        "user_management"
+      ],
+      "premium_requires": null
+    },
+    "data_model_summary": "4 domain entities compiled into relational tables with inferred relationships.",
+    "business_rules_summary": "Role access, ownership checks, CRUD permissions, and audit-safe persistence.",
+    "risk_notes": [],
+    "app_name": "Job Portal Builder",
+    "summary": "Build a job portal where candidates can manage recruiter-only pages.",
+    "premium_required": false,
+    "analytics_required": false,
+    "payments_required": false
+  },
+  "entities": [
+    {
+      "name": "candidate",
+      "table": "candidates",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "recruiter",
+      "table": "recruiters",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "job_post",
+      "table": "job_posts",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "application",
+      "table": "applications",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "layout": "auth",
+        "components": [
+          {
+            "name": "Login Form",
+            "type": "form",
+            "entity": "user"
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "layout": "dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Summary Metrics",
+            "type": "metric",
+            "entity": "candidate"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:candidate"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Candidates",
+        "route": "/candidates",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Candidate Table",
+            "type": "table",
+            "entity": "candidate"
+          },
+          {
+            "name": "Candidate Form",
+            "type": "form",
+            "entity": "candidate"
+          }
+        ],
+        "forms": [
+          {
+            "name": "candidate_form",
+            "entity": "candidate",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/candidates"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:candidate",
+          "write:candidate"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Recruiters",
+        "route": "/recruiters",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Recruiter Table",
+            "type": "table",
+            "entity": "recruiter"
+          },
+          {
+            "name": "Recruiter Form",
+            "type": "form",
+            "entity": "recruiter"
+          }
+        ],
+        "forms": [
+          {
+            "name": "recruiter_form",
+            "entity": "recruiter",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/recruiters"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:recruiter",
+          "write:recruiter"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Job Posts",
+        "route": "/job-posts",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Job Post Table",
+            "type": "table",
+            "entity": "job_post"
+          },
+          {
+            "name": "Job Post Form",
+            "type": "form",
+            "entity": "job_post"
+          }
+        ],
+        "forms": [
+          {
+            "name": "job_post_form",
+            "entity": "job_post",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/job-posts"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:job_post",
+          "write:job_post"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Applications",
+        "route": "/applications",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Application Table",
+            "type": "table",
+            "entity": "application"
+          },
+          {
+            "name": "Application Form",
+            "type": "form",
+            "entity": "application"
+          }
+        ],
+        "forms": [
+          {
+            "name": "application_form",
+            "entity": "application",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/applications"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:application",
+          "write:application"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "validations": [
+          "password_hash_transform"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      },
+      {
+        "name": "get_candidates",
+        "method": "GET",
+        "path": "/api/candidates",
+        "entity": "candidate",
+        "table": "candidates",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:candidate"
+        ]
+      },
+      {
+        "name": "post_candidates",
+        "method": "POST",
+        "path": "/api/candidates",
+        "entity": "candidate",
+        "table": "candidates",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:candidate"
+        ]
+      },
+      {
+        "name": "get_recruiters",
+        "method": "GET",
+        "path": "/api/recruiters",
+        "entity": "recruiter",
+        "table": "recruiters",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:recruiter"
+        ]
+      },
+      {
+        "name": "post_recruiters",
+        "method": "POST",
+        "path": "/api/recruiters",
+        "entity": "recruiter",
+        "table": "recruiters",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:recruiter"
+        ]
+      },
+      {
+        "name": "get_job_posts",
+        "method": "GET",
+        "path": "/api/job-posts",
+        "entity": "job_post",
+        "table": "job_posts",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:job_post"
+        ]
+      },
+      {
+        "name": "post_job_posts",
+        "method": "POST",
+        "path": "/api/job-posts",
+        "entity": "job_post",
+        "table": "job_posts",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:job_post"
+        ]
+      },
+      {
+        "name": "get_applications",
+        "method": "GET",
+        "path": "/api/applications",
+        "entity": "application",
+        "table": "applications",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:application"
+        ]
+      },
+      {
+        "name": "post_applications",
+        "method": "POST",
+        "path": "/api/applications",
+        "entity": "application",
+        "table": "applications",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:application"
+        ]
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "candidates",
+        "entity": "candidate",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "recruiters",
+        "entity": "recruiter",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "job_posts",
+        "entity": "job_post",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "applications",
+        "entity": "application",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": []
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "candidate",
+        "description": "Candidate role"
+      },
+      {
+        "name": "recruiter",
+        "description": "Recruiter role"
+      },
+      {
+        "name": "user",
+        "description": "Auto-added missing role user"
+      },
+      {
+        "name": "admin",
+        "description": "Auto-added missing role admin"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "delete:application",
+        "description": "Allows delete:application",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:candidate",
+        "description": "Allows delete:candidate",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:job_post",
+        "description": "Allows delete:job_post",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "delete:recruiter",
+        "description": "Allows delete:recruiter",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:application",
+        "description": "Allows manage:application",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:candidate",
+        "description": "Allows manage:candidate",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:job_post",
+        "description": "Allows manage:job_post",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:recruiter",
+        "description": "Allows manage:recruiter",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "manage:users",
+        "description": "Allows manage:users",
+        "roles": [
+          "admin"
+        ]
+      },
+      {
+        "name": "read:application",
+        "description": "Allows read:application",
+        "roles": [
+          "candidate",
+          "recruiter",
+          "user"
+        ]
+      },
+      {
+        "name": "read:candidate",
+        "description": "Allows read:candidate",
+        "roles": [
+          "candidate",
+          "recruiter",
+          "user"
+        ]
+      },
+      {
+        "name": "read:job_post",
+        "description": "Allows read:job_post",
+        "roles": [
+          "candidate",
+          "recruiter",
+          "user"
+        ]
+      },
+      {
+        "name": "read:recruiter",
+        "description": "Allows read:recruiter",
+        "roles": [
+          "candidate",
+          "recruiter",
+          "user"
+        ]
+      },
+      {
+        "name": "write:application",
+        "description": "Allows write:application",
+        "roles": [
+          "candidate",
+          "recruiter",
+          "user"
+        ]
+      },
+      {
+        "name": "write:candidate",
+        "description": "Allows write:candidate",
+        "roles": [
+          "candidate",
+          "recruiter",
+          "user"
+        ]
+      },
+      {
+        "name": "write:job_post",
+        "description": "Allows write:job_post",
+        "roles": [
+          "candidate",
+          "recruiter",
+          "user"
+        ]
+      },
+      {
+        "name": "write:recruiter",
+        "description": "Allows write:recruiter",
+        "roles": [
+          "candidate",
+          "recruiter",
+          "user"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "role-access",
+      "description": "Protected pages and APIs require declared roles and permissions.",
+      "expression": "all(required_permissions in user.permissions)",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "ownership-restriction",
+      "description": "Users may update only records they own unless they have manage permission.",
+      "expression": "record.owner_id == user.id or user.has_manage_permission",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": true,
+    "repair_count": 1
+  },
+  "repair_history": [
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "ui.pages./dashboard",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "ui.pages./candidates",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "ui.pages./recruiters",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "ui.pages./job-posts",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "ui.pages./applications",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "api.endpoints./api/candidates",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "api.endpoints./api/candidates",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "api.endpoints./api/recruiters",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "api.endpoints./api/recruiters",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "api.endpoints./api/job-posts",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "api.endpoints./api/job-posts",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "api.endpoints./api/applications",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "MISSING_ROLE",
+      "location": "api.endpoints./api/applications",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "PERMISSION_REFERENCES_MISSING_ROLE",
+      "location": "auth.permissions.read:application",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for PERMISSION_REFERENCES_MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "PERMISSION_REFERENCES_MISSING_ROLE",
+      "location": "auth.permissions.read:candidate",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for PERMISSION_REFERENCES_MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "PERMISSION_REFERENCES_MISSING_ROLE",
+      "location": "auth.permissions.read:job_post",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for PERMISSION_REFERENCES_MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "PERMISSION_REFERENCES_MISSING_ROLE",
+      "location": "auth.permissions.read:recruiter",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for PERMISSION_REFERENCES_MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "PERMISSION_REFERENCES_MISSING_ROLE",
+      "location": "auth.permissions.write:application",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for PERMISSION_REFERENCES_MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "PERMISSION_REFERENCES_MISSING_ROLE",
+      "location": "auth.permissions.write:candidate",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for PERMISSION_REFERENCES_MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "PERMISSION_REFERENCES_MISSING_ROLE",
+      "location": "auth.permissions.write:job_post",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for PERMISSION_REFERENCES_MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    },
+    {
+      "issue_code": "PERMISSION_REFERENCES_MISSING_ROLE",
+      "location": "auth.permissions.write:recruiter",
+      "before": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "after": {
+        "sections": [
+          "app",
+          "assumptions",
+          "entities",
+          "ui",
+          "api",
+          "database",
+          "auth",
+          "business_logic",
+          "validation",
+          "repair_history",
+          "execution"
+        ],
+        "counts": {
+          "pages": 6,
+          "endpoints": 9,
+          "tables": 5
+        }
+      },
+      "repair": "Applied localized repair for PERMISSION_REFERENCES_MISSING_ROLE.",
+      "strategy": "partial_patch",
+      "status": "fixed"
+    }
+  ],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "rendered page Login with auth layout",
+      "rendered component Login Form",
+      "registered route /dashboard",
+      "rendered page Dashboard with dashboard layout",
+      "rendered component Navigation",
+      "rendered component Summary Metrics",
+      "registered route /candidates",
+      "rendered page Candidates with crud layout",
+      "rendered component Candidate Table",
+      "rendered component Candidate Form",
+      "registered route /recruiters",
+      "rendered page Recruiters with crud layout",
+      "rendered component Recruiter Table",
+      "rendered component Recruiter Form",
+      "registered route /job-posts",
+      "rendered page Job Posts with crud layout",
+      "rendered component Job Post Table",
+      "rendered component Job Post Form",
+      "registered route /applications",
+      "rendered page Applications with crud layout",
+      "rendered component Application Table",
+      "rendered component Application Form",
+      "created table candidates(created_at, description, id, name, owner_id)",
+      "created table recruiters(created_at, description, id, name, owner_id)",
+      "created table job_posts(created_at, description, id, name, owner_id)",
+      "created table applications(created_at, description, id, name, owner_id)",
+      "created table users(email, id, password_hash, role)",
+      "registered endpoint POST /api/auth/login",
+      "bound POST /api/auth/login to users",
+      "registered endpoint GET /api/candidates",
+      "bound GET /api/candidates to candidates",
+      "registered endpoint POST /api/candidates",
+      "bound POST /api/candidates to candidates",
+      "registered endpoint GET /api/recruiters",
+      "bound GET /api/recruiters to recruiters",
+      "registered endpoint POST /api/recruiters",
+      "bound POST /api/recruiters to recruiters",
+      "registered endpoint GET /api/job-posts",
+      "bound GET /api/job-posts to job_posts",
+      "registered endpoint POST /api/job-posts",
+      "bound POST /api/job-posts to job_posts",
+      "registered endpoint GET /api/applications",
+      "bound GET /api/applications to applications",
+      "registered endpoint POST /api/applications",
+      "bound POST /api/applications to applications",
+      "loaded auth role candidate",
+      "loaded auth role recruiter",
+      "loaded auth role user",
+      "loaded auth role admin",
+      "loaded permission delete:application",
+      "loaded permission delete:candidate",
+      "loaded permission delete:job_post",
+      "loaded permission delete:recruiter",
+      "loaded permission manage:application",
+      "loaded permission manage:candidate",
+      "loaded permission manage:job_post",
+      "loaded permission manage:recruiter",
+      "loaded permission manage:users",
+      "loaded permission read:application",
+      "loaded permission read:candidate",
+      "loaded permission read:job_post",
+      "loaded permission read:recruiter",
+      "loaded permission write:application",
+      "loaded permission write:candidate",
+      "loaded permission write:job_post",
+      "loaded permission write:recruiter",
+      "verified form login_form submits to /api/auth/login",
+      "checked permission read:candidate for /dashboard",
+      "checked permission read:candidate for /candidates",
+      "checked permission write:candidate for /candidates",
+      "verified form candidate_form submits to /api/candidates",
+      "checked permission read:recruiter for /recruiters",
+      "checked permission write:recruiter for /recruiters",
+      "verified form recruiter_form submits to /api/recruiters",
+      "checked permission read:job_post for /job-posts",
+      "checked permission write:job_post for /job-posts",
+      "verified form job_post_form submits to /api/job-posts",
+      "checked permission read:application for /applications",
+      "checked permission write:application for /applications",
+      "verified form application_form submits to /api/applications",
+      "compiled business rule role-access",
+      "compiled business rule ownership-restriction"
+    ],
+    "errors": []
+  },
+  "quality_metrics": {
+    "consistency_score": 95,
+    "execution_readiness_score": 96,
+    "schema_completeness_score": 94,
+    "repairability_score": 92
+  }
+}

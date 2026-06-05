@@ -1,0 +1,12 @@
+[
+  "Build an app.",
+  "Build something useful for my business.",
+  "Build a CRM where only admins can edit contacts but all users can edit contacts.",
+  "Build an e-commerce app with payments but no users or login.",
+  "Build a hospital system with everything.",
+  "Build analytics dashboard but do not add roles.",
+  "Build a school ERP and remove all authentication.",
+  "Build a premium SaaS app but do not include billing.",
+  "Build a job portal where candidates can manage recruiter-only pages.",
+  "Build an inventory app but no database."
+]

@@ -1,0 +1,1328 @@
+{
+  "pipeline": {
+    "id": "5862f38b-125c-51f9-a2bd-e3bff7a17175",
+    "input_prompt": "Build an LMS with courses, lessons, quizzes, progress tracking, certificates, and instructor role.",
+    "stage_status": [
+      {
+        "stage": "intent_extraction",
+        "status": "passed",
+        "latency_ms": 0.12,
+        "summary": "Extracted structured intent."
+      },
+      {
+        "stage": "system_design",
+        "status": "passed",
+        "latency_ms": 0.13,
+        "summary": "Designed config-driven architecture."
+      },
+      {
+        "stage": "schema_generation",
+        "status": "passed",
+        "latency_ms": 1.21,
+        "summary": "Generated strict app_config schema."
+      },
+      {
+        "stage": "refinement",
+        "status": "passed",
+        "latency_ms": 2.1,
+        "summary": "Normalized permissions, deduped surfaces, and completed business rules."
+      },
+      {
+        "stage": "validation",
+        "status": "passed",
+        "latency_ms": 0.16,
+        "summary": "0 errors, 0 warnings."
+      },
+      {
+        "stage": "repair",
+        "status": "skipped",
+        "latency_ms": 0.02,
+        "summary": "No repair needed."
+      },
+      {
+        "stage": "execution_simulation",
+        "status": "passed",
+        "latency_ms": 0.11,
+        "summary": "Simulated routes, UI, API, DB, auth, permissions, and business rules."
+      }
+    ],
+    "total_latency_ms": 3.92,
+    "deterministic_mode": true,
+    "injected_fault": null
+  },
+  "app": {
+    "name": "Learning Management Builder",
+    "slug": "learning-management-builder",
+    "version": "1.0.0",
+    "description": "Build an LMS with courses, lessons, quizzes, progress tracking, certificates, and instructor role."
+  },
+  "assumptions": [],
+  "intent": {
+    "app_type": "learning_management",
+    "domain": "learning_management",
+    "primary_goal": "Build an LMS with courses, lessons, quizzes, progress tracking, certificates, and instructor role.",
+    "features": [
+      "courses",
+      "progress"
+    ],
+    "requested_entities": [
+      "course",
+      "lesson",
+      "quiz",
+      "progress",
+      "certificate"
+    ],
+    "requested_roles": [
+      "user",
+      "instructor"
+    ],
+    "auth_required": true,
+    "payments_required": false,
+    "analytics_required": false,
+    "premium_required": false,
+    "crud_required": true,
+    "ambiguities": [],
+    "conflicts": [],
+    "missing_details": [],
+    "assumptions": []
+  },
+  "design": {
+    "architecture": "config-driven full-stack application",
+    "modules": [
+      "ui",
+      "api",
+      "database",
+      "auth",
+      "validation",
+      "runtime_simulation"
+    ],
+    "entities": [
+      {
+        "name": "course",
+        "description": "Course records used by the learning_management app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "lesson",
+        "description": "Lesson records used by the learning_management app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "quiz",
+        "description": "Quiz records used by the learning_management app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "progress",
+        "description": "Progress records used by the learning_management app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      {
+        "name": "certificate",
+        "description": "Certificate records used by the learning_management app.",
+        "fields": [
+          "id",
+          "name",
+          "description",
+          "owner_id",
+          "created_at"
+        ]
+      }
+    ],
+    "roles": [
+      "user",
+      "instructor"
+    ],
+    "user_flows": [
+      "login",
+      "dashboard",
+      "manage courses",
+      "manage lessons",
+      "manage quizs",
+      "manage progress",
+      "manage certificates"
+    ],
+    "access_model": {
+      "default_read_roles": [
+        "user",
+        "instructor"
+      ],
+      "write_roles": [
+        "user",
+        "instructor"
+      ],
+      "admin_only": [
+        "analytics",
+        "user_management"
+      ],
+      "premium_requires": null
+    },
+    "data_model_summary": "5 domain entities compiled into relational tables with inferred relationships.",
+    "business_rules_summary": "Role access, ownership checks, CRUD permissions, and audit-safe persistence.",
+    "risk_notes": [],
+    "app_name": "Learning Management Builder",
+    "summary": "Build an LMS with courses, lessons, quizzes, progress tracking, certificates, and instructor role.",
+    "premium_required": false,
+    "analytics_required": false,
+    "payments_required": false
+  },
+  "entities": [
+    {
+      "name": "course",
+      "table": "courses",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "lesson",
+      "table": "lessons",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "quiz",
+      "table": "quizs",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "table": "progress",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    },
+    {
+      "name": "certificate",
+      "table": "certificates",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "computed": false
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "computed": false
+        },
+        {
+          "name": "created_at",
+          "type": "datetime",
+          "required": true,
+          "computed": false
+        }
+      ]
+    }
+  ],
+  "ui": {
+    "pages": [
+      {
+        "name": "Login",
+        "route": "/login",
+        "layout": "auth",
+        "components": [
+          {
+            "name": "Login Form",
+            "type": "form",
+            "entity": "user"
+          }
+        ],
+        "forms": [
+          {
+            "name": "login_form",
+            "entity": "user",
+            "fields": [
+              "email",
+              "password"
+            ],
+            "submit_endpoint": "/api/auth/login"
+          }
+        ],
+        "required_roles": [],
+        "required_permissions": [],
+        "premium_required": false
+      },
+      {
+        "name": "Dashboard",
+        "route": "/dashboard",
+        "layout": "dashboard",
+        "components": [
+          {
+            "name": "Navigation",
+            "type": "nav",
+            "entity": null
+          },
+          {
+            "name": "Summary Metrics",
+            "type": "metric",
+            "entity": "course"
+          }
+        ],
+        "forms": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:course"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Courses",
+        "route": "/courses",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Course Table",
+            "type": "table",
+            "entity": "course"
+          },
+          {
+            "name": "Course Form",
+            "type": "form",
+            "entity": "course"
+          }
+        ],
+        "forms": [
+          {
+            "name": "course_form",
+            "entity": "course",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/courses"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:course",
+          "write:course"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Lessons",
+        "route": "/lessons",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Lesson Table",
+            "type": "table",
+            "entity": "lesson"
+          },
+          {
+            "name": "Lesson Form",
+            "type": "form",
+            "entity": "lesson"
+          }
+        ],
+        "forms": [
+          {
+            "name": "lesson_form",
+            "entity": "lesson",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/lessons"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:lesson",
+          "write:lesson"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Quizs",
+        "route": "/quizs",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Quiz Table",
+            "type": "table",
+            "entity": "quiz"
+          },
+          {
+            "name": "Quiz Form",
+            "type": "form",
+            "entity": "quiz"
+          }
+        ],
+        "forms": [
+          {
+            "name": "quiz_form",
+            "entity": "quiz",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/quizs"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:quiz",
+          "write:quiz"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Progress",
+        "route": "/progress",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Progress Table",
+            "type": "table",
+            "entity": "progress"
+          },
+          {
+            "name": "Progress Form",
+            "type": "form",
+            "entity": "progress"
+          }
+        ],
+        "forms": [
+          {
+            "name": "progress_form",
+            "entity": "progress",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/progress"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:progress",
+          "write:progress"
+        ],
+        "premium_required": false
+      },
+      {
+        "name": "Certificates",
+        "route": "/certificates",
+        "layout": "crud",
+        "components": [
+          {
+            "name": "Certificate Table",
+            "type": "table",
+            "entity": "certificate"
+          },
+          {
+            "name": "Certificate Form",
+            "type": "form",
+            "entity": "certificate"
+          }
+        ],
+        "forms": [
+          {
+            "name": "certificate_form",
+            "entity": "certificate",
+            "fields": [
+              "name",
+              "description",
+              "owner_id"
+            ],
+            "submit_endpoint": "/api/certificates"
+          }
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:certificate",
+          "write:certificate"
+        ],
+        "premium_required": false
+      }
+    ]
+  },
+  "api": {
+    "endpoints": [
+      {
+        "name": "login",
+        "method": "POST",
+        "path": "/api/auth/login",
+        "entity": "user",
+        "table": "users",
+        "body_fields": [
+          "email",
+          "password"
+        ],
+        "computed_fields": [
+          "password"
+        ],
+        "validations": [
+          "password_hash_transform"
+        ],
+        "required_roles": [],
+        "required_permissions": []
+      },
+      {
+        "name": "get_courses",
+        "method": "GET",
+        "path": "/api/courses",
+        "entity": "course",
+        "table": "courses",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:course"
+        ]
+      },
+      {
+        "name": "post_courses",
+        "method": "POST",
+        "path": "/api/courses",
+        "entity": "course",
+        "table": "courses",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:course"
+        ]
+      },
+      {
+        "name": "get_lessons",
+        "method": "GET",
+        "path": "/api/lessons",
+        "entity": "lesson",
+        "table": "lessons",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:lesson"
+        ]
+      },
+      {
+        "name": "post_lessons",
+        "method": "POST",
+        "path": "/api/lessons",
+        "entity": "lesson",
+        "table": "lessons",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:lesson"
+        ]
+      },
+      {
+        "name": "get_quizs",
+        "method": "GET",
+        "path": "/api/quizs",
+        "entity": "quiz",
+        "table": "quizs",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:quiz"
+        ]
+      },
+      {
+        "name": "post_quizs",
+        "method": "POST",
+        "path": "/api/quizs",
+        "entity": "quiz",
+        "table": "quizs",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:quiz"
+        ]
+      },
+      {
+        "name": "get_progress",
+        "method": "GET",
+        "path": "/api/progress",
+        "entity": "progress",
+        "table": "progress",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:progress"
+        ]
+      },
+      {
+        "name": "post_progress",
+        "method": "POST",
+        "path": "/api/progress",
+        "entity": "progress",
+        "table": "progress",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:progress"
+        ]
+      },
+      {
+        "name": "get_certificates",
+        "method": "GET",
+        "path": "/api/certificates",
+        "entity": "certificate",
+        "table": "certificates",
+        "body_fields": [],
+        "computed_fields": [],
+        "validations": [],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "read:certificate"
+        ]
+      },
+      {
+        "name": "post_certificates",
+        "method": "POST",
+        "path": "/api/certificates",
+        "entity": "certificate",
+        "table": "certificates",
+        "body_fields": [
+          "name",
+          "description",
+          "owner_id"
+        ],
+        "computed_fields": [],
+        "validations": [
+          "body_schema_matches_table"
+        ],
+        "required_roles": [
+          "user"
+        ],
+        "required_permissions": [
+          "write:certificate"
+        ]
+      }
+    ]
+  },
+  "database": {
+    "tables": [
+      {
+        "name": "courses",
+        "entity": "course",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "lessons",
+        "entity": "lesson",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "quizs",
+        "entity": "quiz",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "progress",
+        "entity": "progress",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "certificates",
+        "entity": "certificate",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "primary_key": false,
+            "nullable": true
+          },
+          {
+            "name": "owner_id",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "created_at",
+            "type": "datetime",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      },
+      {
+        "name": "users",
+        "entity": "user",
+        "columns": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "primary_key": true,
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "password_hash",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          },
+          {
+            "name": "role",
+            "type": "string",
+            "primary_key": false,
+            "nullable": false
+          }
+        ]
+      }
+    ],
+    "relationships": []
+  },
+  "auth": {
+    "roles": [
+      {
+        "name": "instructor",
+        "description": "Instructor role"
+      },
+      {
+        "name": "user",
+        "description": "User role"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "delete:certificate",
+        "description": "Allows delete:certificate",
+        "roles": []
+      },
+      {
+        "name": "delete:course",
+        "description": "Allows delete:course",
+        "roles": []
+      },
+      {
+        "name": "delete:lesson",
+        "description": "Allows delete:lesson",
+        "roles": []
+      },
+      {
+        "name": "delete:progress",
+        "description": "Allows delete:progress",
+        "roles": []
+      },
+      {
+        "name": "delete:quiz",
+        "description": "Allows delete:quiz",
+        "roles": []
+      },
+      {
+        "name": "manage:certificate",
+        "description": "Allows manage:certificate",
+        "roles": []
+      },
+      {
+        "name": "manage:course",
+        "description": "Allows manage:course",
+        "roles": []
+      },
+      {
+        "name": "manage:lesson",
+        "description": "Allows manage:lesson",
+        "roles": []
+      },
+      {
+        "name": "manage:progress",
+        "description": "Allows manage:progress",
+        "roles": []
+      },
+      {
+        "name": "manage:quiz",
+        "description": "Allows manage:quiz",
+        "roles": []
+      },
+      {
+        "name": "manage:users",
+        "description": "Allows manage:users",
+        "roles": []
+      },
+      {
+        "name": "read:certificate",
+        "description": "Allows read:certificate",
+        "roles": [
+          "instructor",
+          "user"
+        ]
+      },
+      {
+        "name": "read:course",
+        "description": "Allows read:course",
+        "roles": [
+          "instructor",
+          "user"
+        ]
+      },
+      {
+        "name": "read:lesson",
+        "description": "Allows read:lesson",
+        "roles": [
+          "instructor",
+          "user"
+        ]
+      },
+      {
+        "name": "read:progress",
+        "description": "Allows read:progress",
+        "roles": [
+          "instructor",
+          "user"
+        ]
+      },
+      {
+        "name": "read:quiz",
+        "description": "Allows read:quiz",
+        "roles": [
+          "instructor",
+          "user"
+        ]
+      },
+      {
+        "name": "write:certificate",
+        "description": "Allows write:certificate",
+        "roles": [
+          "instructor",
+          "user"
+        ]
+      },
+      {
+        "name": "write:course",
+        "description": "Allows write:course",
+        "roles": [
+          "instructor",
+          "user"
+        ]
+      },
+      {
+        "name": "write:lesson",
+        "description": "Allows write:lesson",
+        "roles": [
+          "instructor",
+          "user"
+        ]
+      },
+      {
+        "name": "write:progress",
+        "description": "Allows write:progress",
+        "roles": [
+          "instructor",
+          "user"
+        ]
+      },
+      {
+        "name": "write:quiz",
+        "description": "Allows write:quiz",
+        "roles": [
+          "instructor",
+          "user"
+        ]
+      }
+    ]
+  },
+  "business_logic": [
+    {
+      "name": "role-access",
+      "description": "Protected pages and APIs require declared roles and permissions.",
+      "expression": "all(required_permissions in user.permissions)",
+      "applies_to": [
+        "ui.pages",
+        "api.endpoints"
+      ]
+    },
+    {
+      "name": "ownership-restriction",
+      "description": "Users may update only records they own unless they have manage permission.",
+      "expression": "record.owner_id == user.id or user.has_manage_permission",
+      "applies_to": [
+        "api.endpoints"
+      ]
+    }
+  ],
+  "validation": {
+    "status": "passed",
+    "errors": [],
+    "warnings": [],
+    "repair_attempted": false,
+    "repair_count": 0
+  },
+  "repair_history": [],
+  "execution": {
+    "status": "passed",
+    "steps": [
+      "registered route /login",
+      "rendered page Login with auth layout",
+      "rendered component Login Form",
+      "registered route /dashboard",
+      "rendered page Dashboard with dashboard layout",
+      "rendered component Navigation",
+      "rendered component Summary Metrics",
+      "registered route /courses",
+      "rendered page Courses with crud layout",
+      "rendered component Course Table",
+      "rendered component Course Form",
+      "registered route /lessons",
+      "rendered page Lessons with crud layout",
+      "rendered component Lesson Table",
+      "rendered component Lesson Form",
+      "registered route /quizs",
+      "rendered page Quizs with crud layout",
+      "rendered component Quiz Table",
+      "rendered component Quiz Form",
+      "registered route /progress",
+      "rendered page Progress with crud layout",
+      "rendered component Progress Table",
+      "rendered component Progress Form",
+      "registered route /certificates",
+      "rendered page Certificates with crud layout",
+      "rendered component Certificate Table",
+      "rendered component Certificate Form",
+      "created table courses(created_at, description, id, name, owner_id)",
+      "created table lessons(created_at, description, id, name, owner_id)",
+      "created table quizs(created_at, description, id, name, owner_id)",
+      "created table progress(created_at, description, id, name, owner_id)",
+      "created table certificates(created_at, description, id, name, owner_id)",
+      "created table users(email, id, password_hash, role)",
+      "registered endpoint POST /api/auth/login",
+      "bound POST /api/auth/login to users",
+      "registered endpoint GET /api/courses",
+      "bound GET /api/courses to courses",
+      "registered endpoint POST /api/courses",
+      "bound POST /api/courses to courses",
+      "registered endpoint GET /api/lessons",
+      "bound GET /api/lessons to lessons",
+      "registered endpoint POST /api/lessons",
+      "bound POST /api/lessons to lessons",
+      "registered endpoint GET /api/quizs",
+      "bound GET /api/quizs to quizs",
+      "registered endpoint POST /api/quizs",
+      "bound POST /api/quizs to quizs",
+      "registered endpoint GET /api/progress",
+      "bound GET /api/progress to progress",
+      "registered endpoint POST /api/progress",
+      "bound POST /api/progress to progress",
+      "registered endpoint GET /api/certificates",
+      "bound GET /api/certificates to certificates",
+      "registered endpoint POST /api/certificates",
+      "bound POST /api/certificates to certificates",
+      "loaded auth role instructor",
+      "loaded auth role user",
+      "loaded permission delete:certificate",
+      "loaded permission delete:course",
+      "loaded permission delete:lesson",
+      "loaded permission delete:progress",
+      "loaded permission delete:quiz",
+      "loaded permission manage:certificate",
+      "loaded permission manage:course",
+      "loaded permission manage:lesson",
+      "loaded permission manage:progress",
+      "loaded permission manage:quiz",
+      "loaded permission manage:users",
+      "loaded permission read:certificate",
+      "loaded permission read:course",
+      "loaded permission read:lesson",
+      "loaded permission read:progress",
+      "loaded permission read:quiz",
+      "loaded permission write:certificate",
+      "loaded permission write:course",
+      "loaded permission write:lesson",
+      "loaded permission write:progress",
+      "loaded permission write:quiz",
+      "verified form login_form submits to /api/auth/login",
+      "checked permission read:course for /dashboard",
+      "checked permission read:course for /courses",
+      "checked permission write:course for /courses",
+      "verified form course_form submits to /api/courses",
+      "checked permission read:lesson for /lessons",
+      "checked permission write:lesson for /lessons",
+      "verified form lesson_form submits to /api/lessons",
+      "checked permission read:quiz for /quizs",
+      "checked permission write:quiz for /quizs",
+      "verified form quiz_form submits to /api/quizs",
+      "checked permission read:progress for /progress",
+      "checked permission write:progress for /progress",
+      "verified form progress_form submits to /api/progress",
+      "checked permission read:certificate for /certificates",
+      "checked permission write:certificate for /certificates",
+      "verified form certificate_form submits to /api/certificates",
+      "compiled business rule role-access",
+      "compiled business rule ownership-restriction"
+    ],
+    "errors": []
+  },
+  "quality_metrics": {
+    "consistency_score": 95,
+    "execution_readiness_score": 96,
+    "schema_completeness_score": 94,
+    "repairability_score": 92
+  }
+}
