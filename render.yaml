@@ -7,6 +7,8 @@ services:
     buildCommand: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
     startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: CONFIGFORGE_MODEL_MODE
         value: deterministic
       - key: CONFIGFORGE_OUTPUT_DIR
